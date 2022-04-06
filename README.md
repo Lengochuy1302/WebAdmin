@@ -7,7 +7,7 @@ Finding cheap and reputable hostels can now be searched through intermediary web
 Before anything else, make sure nodejs and npm are installed on your machine. If not, follow [these instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and then proceed with the next steps:
 
 ```bash
-git clone https://github.com/Lengochuy1302/asmsever.git
+git clone https://github.com/Lengochuy1302/WebAdmin.git
 ```
 
 ```bash
