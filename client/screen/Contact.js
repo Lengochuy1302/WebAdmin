@@ -330,7 +330,7 @@ const HomeScreen = ({ navigation }) => {
 
   const getData = async () => {
     try {
-      const response = await fetch('http://172.16.10.52:8000/dssp/' + pageNumber);
+      const response = await fetch('http://192.168.1.25:8000/dssp/' + pageNumber);
       const json = await response.json();
       console.log(json)
       setData(json);
@@ -439,7 +439,7 @@ const HomeScreen = ({ navigation }) => {
               // }
               >
                      <View style={{fontSize: 17, marginBottom: 10 }}>
-                  <Image style={styles.slide} source={{ uri: "http://172.16.10.52:8000/upload/" +  item.image}} />
+                  <Image style={styles.slide} source={{ uri: "http://192.168.1.25:8000/upload/" +  item.image}} />
                   <View
                     style={{
                       backgroundColor: "rgba(0, 0, 0, 0.243)",

@@ -4,6 +4,7 @@ const port = 8000;
 var bodyparser = require("body-parser");
 var cosr = require("cors");
 var mysql = require("mysql");
+var md5 = require('md5');
 app.use(cosr());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -340,7 +341,7 @@ app.post("/singup", (req, res) => {
         "INSERT INTO user ( email, matKhau, thanhVien) values('" +
         req.body.tentaikhoans +
         "','" +
-        req.body.matkhaus +
+        md5(req.body.matkhaus) +
         "','host');";
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
@@ -356,7 +357,7 @@ app.post("/login", (req, res) => {
     "SELECT * FROM user WHERE email= '" +
     req.body.username +
     "' AND matkhau= '" +
-    req.body.password +
+    md5(req.body.password) +
     "'";
 
   con.query(sql, function (err, result, fields) {
