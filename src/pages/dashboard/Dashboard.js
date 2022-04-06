@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   LinearProgress,
@@ -20,10 +20,10 @@ import {
   YAxis,
   XAxis,
 } from "recharts";
-
+import axios from "axios";
 // styles
 import useStyles from "./styles";
-
+import "font-awesome/css/font-awesome.min.css";
 // components
 
 import mock from "./mock";
@@ -45,7 +45,32 @@ const PieChartData = [
 export default function Dashboard(props) {
   var classes = useStyles();
   var theme = useTheme();
+  const [dataPost, setDataPost] = React.useState([]);
+  const getDataPost = async () => {
+    const baseUrl = "http://localhost:8000/ds";
+    const response = await axios.get(baseUrl);
+    setDataPost(response.data);
+  };
 
+  const [datamember, setDataMember] = React.useState([]);
+  const getDataMember = async () => {
+    const baseUrl = "http://localhost:8000/usermember";
+    const response = await axios.get(baseUrl);
+    setDataMember(response.data);
+  };
+
+  const [datahost, setDataHost] = React.useState([]);
+  const getDataHost = async () => {
+    const baseUrl = "http://localhost:8000/userhost";
+    const response = await axios.get(baseUrl);
+    setDataHost(response.data);
+  };
+
+  useEffect(() => {
+    getDataPost();
+    getDataMember();
+    getDataHost();
+  }, []);
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
 
@@ -63,17 +88,14 @@ export default function Dashboard(props) {
           >
             <div className={classes.visitsNumberContainer}>
               <Typography size="xl" weight="medium">
-                300 Phòng
+                {dataPost.length} Phòng
               </Typography>
               <LineChart
                 width={270}
                 height={30}
                 data={[
-                  { value: 10 },
-                  { value: 35 },
-                  { value: 10 },
-                  { value: 17 },
-                  { value: 30 },
+                  { value: 0 },
+                  { value: dataPost.length },
                 ]}
                 margin={{ left: theme.spacing(2) }}
               >
@@ -102,7 +124,7 @@ export default function Dashboard(props) {
                 <Typography color="text" colorBrightness="secondary">
                   Chủ Phòng
                 </Typography>
-                <Typography size="md">30</Typography>
+                <Typography size="md">{datahost.length}</Typography>
               </Grid>
               <Grid item>
                 <Typography color="text" colorBrightness="secondary">
@@ -121,43 +143,12 @@ export default function Dashboard(props) {
         </Grid>
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget
-            title="Người Dùng"
+            title="Thống kê thành viên"
             upperTitle
             className={classes.card}
             bodyClass={classes.fullHeightBody}
           >
-            <div className={classes.performanceLegendWrapper}>
-              <div className={classes.legendElement}>
-                <Dot color="warning" />
-                <Typography
-                  color="text"
-                  colorBrightness="secondary"
-                  className={classes.legendElementText}
-                >
-                  Sinh Viên
-                </Typography>
-              </div>
-              <div className={classes.legendElement}>
-                <Dot color="primary" />
-                <Typography
-                  color="text"
-                  colorBrightness="secondary"
-                  className={classes.legendElementText}
-                >
-                 Người Dùng Mới  
-                </Typography>
-              </div>
-              <div className={classes.legendElement}>
-                <Dot color="red" />
-                <Typography
-                  color="text"
-                  colorBrightness="secondary"
-                  className={classes.legendElementText}
-                >
-                 Admin 
-                </Typography>
-              </div>
-            </div>
+      
             <div className={classes.progressSection}>
               <Typography
                 size="md"
@@ -165,13 +156,13 @@ export default function Dashboard(props) {
                 colorBrightness="secondary"
                 className={classes.progressSectionTitle}
               >
-                Sinh Viên
+                Chủ Phòng
               </Typography>
-              <Typography size="md">30.0%</Typography>
+              <Typography size="md">{datahost.length} người</Typography>
 
               <LinearProgress
                 variant="determinate"
-                value={30}
+                value={datahost.length}
                 classes={{ barColorPrimary: classes.progressBar }}
                 className={classes.progress}
               />
@@ -183,31 +174,13 @@ export default function Dashboard(props) {
                 colorBrightness=""
                 className={classes.progressSectionTitle}
               >
-                Người Dùng Mới
+                Người Dùng
               </Typography>
-              <Typography size="md">60.0%</Typography>
+              <Typography size="md">{datamember.length} người</Typography>
 
               <LinearProgress
                 variant="determinate"
-                value={60}
-                classes={{ barColorPrimary: classes.progressBar }}
-                className={classes.progress}
-              />
-            </div>
-            <div>
-              <Typography
-                size="md"
-                color="text"
-                colorBrightness="secondary"
-                className={classes.progressSectionTitle}
-              >
-                Admin
-              </Typography>
-              <Typography size="md">10.0%</Typography>
-
-              <LinearProgress
-                variant="determinate"
-                value={10}
+                value={datamember.length}
                 classes={{ barColorPrimary: classes.progressBar }}
                 className={classes.progress}
               />
@@ -229,31 +202,11 @@ export default function Dashboard(props) {
                 colorBrightness="secondary"
                 className={classes.serverOverviewElementText}
               >
-                1500 <i class="fa-solid fa-eye"></i>
+                1500  <i class="fa fa-eye" aria-hidden="true"></i>
               </Typography>
-              <div className={classes.serverOverviewElementChartWrapper}>
-                {/* <ResponsiveContainer height={50} width="99%">
-                  <AreaChart data={getRandomData(10)}>
-                    <Area
-                      type="natural"
-                      dataKey="value"
-                      stroke={theme.palette.secondary.main}
-                      fill={theme.palette.secondary.light}
-                      strokeWidth={2}
-                      fillOpacity="0.25"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer> */}
-              </div>
             </div>
             <div className={classes.serverOverviewElement}>
-              {/* <Typography
-                color="text"
-                colorBrightness="secondary"
-                className={classes.serverOverviewElementText}
-              >
-                54% / 31°С / 3.3 Ghz
-              </Typography> */}
+        
               <div className={classes.serverOverviewElementChartWrapper}>
                 <ResponsiveContainer height={90} width="99%">
                   <AreaChart data={getRandomData(10)}>
@@ -269,69 +222,6 @@ export default function Dashboard(props) {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className={classes.serverOverviewElement}>
-              {/* <Typography
-                color="text"
-                colorBrightness="secondary"
-                className={classes.serverOverviewElementText}
-              >
-                57% / 21°С / 3.3 Ghz
-              </Typography> */}
-              <div className={classes.serverOverviewElementChartWrapper}>
-                {/* <ResponsiveContainer height={50} width="99%">
-                  <AreaChart data={getRandomData(10)}>
-                    <Area
-                      type="natural"
-                      dataKey="value"
-                      stroke={theme.palette.warning.main}
-                      fill={theme.palette.warning.light}
-                      strokeWidth={2}
-                      fillOpacity="0.25"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer> */}
-              </div>
-            </div>
-          </Widget>
-        </Grid>
-        <Grid item lg={3} md={4} sm={6} xs={20}>
-          <Widget title="Tỉ Lệ Đề Xuất Trên Các Nền Tảng (%)" upperTitle className={classes.card}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <ResponsiveContainer width="100%" height={120}>
-                  <PieChart margin={{ left: theme.spacing(2) }}>
-                    <Pie
-                      data={PieChartData}
-                      innerRadius={27}
-                      outerRadius={52}
-                      dataKey="value"
-                    >
-                      {PieChartData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={theme.palette[entry.color].main}
-                        />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </Grid>
-              <Grid item xs={6}>
-                <div className={classes.pieChartLegendWrapper}>
-                  {PieChartData.map(({ name, value, color }, index) => (
-                    <div key={color} className={classes.legendItemContainer}>
-                      <Dot color={color} />
-                      <Typography style={{ whiteSpace: "nowrap" }}>
-                        &nbsp;{name}&nbsp;
-                      </Typography>
-                      <Typography color="text" colorBrightness="secondary">
-                        &nbsp;{value}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              </Grid>
-            </Grid>
           </Widget>
         </Grid>
         <Grid item xs={12}>

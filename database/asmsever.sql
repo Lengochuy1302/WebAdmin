@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 05, 2022 lúc 03:03 PM
+-- Thời gian đã tạo: Th4 06, 2022 lúc 10:41 AM
 -- Phiên bản máy phục vụ: 10.4.22-MariaDB
 -- Phiên bản PHP: 8.1.2
 
@@ -58,7 +58,7 @@ CREATE TABLE `room` (
   `chieuRong` int(3) NOT NULL,
   `giaNuoc` int(10) NOT NULL,
   `giaDien` int(10) NOT NULL,
-  `moTa` varchar(255) NOT NULL,
+  `moTa` text NOT NULL,
   `tinh` varchar(20) NOT NULL,
   `quan` varchar(20) NOT NULL,
   `phuong` varchar(20) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE `user` (
   `avartar` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `thanhVien` varchar(10) NOT NULL,
-  `matKhau` varchar(50) NOT NULL
+  `matKhau` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -127,10 +127,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`idUser`, `avartar`, `email`, `thanhVien`, `matKhau`) VALUES
 (1, '', 'admin@gmail.com', 'admin', 'admin'),
-(2, '', 'lengochuyc2130220002@gmail.com', 'host', 'lengochuy'),
-(3, '', 'taung@gmail.com', 'member', '123456'),
 (4, '', 'tai@gmail.com', 'host', '123456'),
-(5, '', 'taingduy@gmail.com', 'member', '123456');
+(6, '', 'lengochuyc2130220002@gmail.com', 'host', 'd62a14d1d2ceed00d4cbc708c2746d2a');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -186,7 +184,7 @@ ALTER TABLE `tienich`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

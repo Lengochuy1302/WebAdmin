@@ -31,6 +31,20 @@ app.get("/ds", (req, res) => {
   });
 });
 
+app.get("/usermember", (req, res) => {
+  con.query("SELECT * FROM `user` WHERE thanhVien = 'member'", function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+app.get("/userhost", (req, res) => {
+  con.query("SELECT * FROM `user` WHERE thanhVien = 'host'", function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
 app.get("/dssv/:ids", (req, res) => {
   con.query(
     "SELECT * FROM sinhvien WHERE id" + req.params.ids,
