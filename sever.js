@@ -288,7 +288,7 @@ app.post("/singupclient", (req, res) => {
     "SELECT * FROM user WHERE email= '" +
     req.body.tentaikhoans +
     "' AND matkhau= '" +
-    req.body.matkhaus +
+    md5(req.body.matkhaus) +
     "'";
 
     console.log(sql);
@@ -307,7 +307,7 @@ app.post("/singupclient", (req, res) => {
         "INSERT INTO user ( email, matKhau, thanhVien) values('" +
         req.body.tentaikhoans +
         "','" +
-        req.body.matkhaus +
+        md5(req.body.matkhaus) +
         "','member');";
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
