@@ -3,6 +3,8 @@ import React from "react";
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
 
+
+
 function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN_SUCCESS":
@@ -54,7 +56,7 @@ const refreshPage = () => {
 };
 
 function loginUser(dispatch, login, password, history, setIsLoading, setError) {
-  fetch("http://172.16.10.238:8000/login", {
+  fetch("http://172.16.10.154:8000/login", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -71,15 +73,12 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
       history.push("/app/dashboard");
     } else {
       if (res.success === true) {
-        localStorage.setItem("id_token", "1");
+        localStorage.setItem("id_token", res.IDUSER);
+        localStorage.setItem("email_token", res.EMAIL);
         dispatch({ type: "LOGIN_SUCCESS" });
         setError(null);
         setIsLoading(false);
         history.push("/app/dashboard");
-        // AsyncStorage.getItem('key').then(value => {
-        //   setExampleState.title == value;
-        //   console.log(exampleState);
-        // });
        } else {
            alert(""+ res.message);
        }
@@ -92,12 +91,12 @@ function signUp(dispatch,email, login, password, history, setIsLoading, setError
   console.log(email);
   console.log(login);
  console.log(password);
- if (login != password) {
+ if (login !== password) {
   alert("Mật khẩu không khớp");
   return;
 }
 
-fetch("http://172.16.10.238:8000/singup", {
+fetch("http://172.16.10.154:8000/singup", {
   method: "POST",
   headers: {
     Accept: "application/json",
@@ -121,6 +120,7 @@ fetch("http://172.16.10.238:8000/singup", {
 
 function signOut(dispatch, history) {
   localStorage.removeItem("id_token");
+  localStorage.removeItem("email_token");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/login");
 }

@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
   const getData = async () => {
     try {
       const response = await fetch(
-        "http://172.16.10.238:8000/ds"
+        "http://172.16.10.154:8000/ds"
       );
       const json = await response.json();
       setData(json);
@@ -80,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
               // }
               >
                      <View style={{fontSize: 17, marginBottom: 0 }}>
-                  <Image style={styles.slide} source={{ uri: "http://172.16.10.238:8000/upload/" +  item.image}} />
+                  <Image style={styles.slide} source={{ uri: "http://172.16.10.154:8000/upload/" +  item.image}} />
                   <View
                     style={{
                       backgroundColor: "rgba(0, 0, 0, 0.243)",

@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TypographyPage() {
   var classes = useStyle();
+  const iduser = localStorage.getItem('id_token');
   const classe = useStyles();
   const [tenPhong, setTenPhong] = React.useState("");
   const [giaPhong, setGiaPhong] = React.useState("");
@@ -369,14 +370,14 @@ export default function TypographyPage() {
         return (
           <>
             <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={classes.input} style={{display: "none", marginBottom: 20 }}>
+            <div className={classes.input} style={{display: 'none' , marginBottom: 20 }}>
                 <TextField
                   className={classes.inputText}
                   id="outlined-basic"
-                  label="Tỉnh"
+                  label="Id User"
                   variant="outlined"
-                  {...register("TienIch")}
-                  defaultValue={ JSON.stringify(statetienich).replace(/['"]+/g, '').slice(1,-1)}
+                  {...register("IdUser")}
+                  defaultValue={iduser}
             
                 />
            

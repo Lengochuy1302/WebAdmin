@@ -18,7 +18,8 @@ import {
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
 import classNames from "classnames";
-
+import Avatar from '@material-ui/core/Avatar';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 // styles
 import useStyles from "./styles";
 
@@ -95,7 +96,7 @@ export default function Header(props) {
   var layoutState = useLayoutState();
   var layoutDispatch = useLayoutDispatch();
   var userDispatch = useUserDispatch();
-
+  const email = localStorage.getItem('email_token');
   // local
   var [mailMenu, setMailMenu] = useState(null);
   var [isMailsUnread, setIsMailsUnread] = useState(true);
@@ -181,9 +182,15 @@ export default function Header(props) {
           classes={{ paper: classes.profileMenu }}
           disableAutoFocusItem
         >
+          <div style={{width: '100%' , paddingLeft: '38%'}}>
+          <Avatar style={{width: 100, height: 100}} className={classes.orange}>{email.slice(0, 1).toUpperCase()}</Avatar>
+          </div>
+
+
           <div className={classes.profileMenuUser}>
+            
             <Typography variant="h6" weight="medium">
-            Email: Lengochuy@gmail.com
+            Email: {email}
             </Typography>
    
           </div>

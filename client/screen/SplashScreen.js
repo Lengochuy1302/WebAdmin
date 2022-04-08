@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Logo from "../assets/logosplash.png";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const BGColor = "#4D4A95";
 
 export default function SplashScreen({ navigation }) {
@@ -22,7 +23,20 @@ export default function SplashScreen({ navigation }) {
   const scaleTitle = useRef(new Animated.Value(1)).current;
   const moveLogo = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const moveTitle = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-
+  const getDataUser = async () => {
+      try {
+        const taikhoan = await AsyncStorage.getItem('user')
+        const matkhau = await AsyncStorage.getItem('pass')
+        if(taikhoan !== null && matkhau !== null) {
+          navigation.navigate('Quản lý');
+        }else {
+          navigation.navigate('Login Screen')
+        }
+        
+      } catch(e) {
+       
+      }
+    }
   useEffect(() => {
     setTimeout(() => {
       Animated.parallel([
@@ -54,7 +68,7 @@ export default function SplashScreen({ navigation }) {
         }),
       ]).start();
       setTimeout(() => {
-        navigation.navigate('Login Screen')
+        getDataUser()
         },700);
       }, 1500);
   }, []);

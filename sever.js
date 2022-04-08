@@ -4,7 +4,7 @@ const port = 8000;
 var bodyparser = require("body-parser");
 var cosr = require("cors");
 var mysql = require("mysql");
-var md5 = require('md5');
+var md5 = require("md5");
 app.use(cosr());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,17 +32,23 @@ app.get("/ds", (req, res) => {
 });
 
 app.get("/usermember", (req, res) => {
-  con.query("SELECT * FROM `user` WHERE thanhVien = 'member'", function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
+  con.query(
+    "SELECT * FROM `user` WHERE thanhVien = 'member'",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
 });
 
 app.get("/userhost", (req, res) => {
-  con.query("SELECT * FROM `user` WHERE thanhVien = 'host'", function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
+  con.query(
+    "SELECT * FROM `user` WHERE thanhVien = 'host'",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
 });
 
 app.get("/dssv/:ids", (req, res) => {
@@ -136,8 +142,10 @@ app.post("/addProduc", upload.single("file"), (req, res, next) => {
     req.body.phuong +
     "','" +
     req.body.duong +
-    "', '02','" +
-    req.body.TienIch +
+    "','" +
+    req.body.IdUser +
+    "','" +
+    req.body.IdUser +
     "','false','false','" +
     req.body.gioiTinh +
     "','" +
@@ -295,7 +303,6 @@ app.post("/updateProduc", (req, res) => {
   });
 });
 
-
 // singup
 app.post("/singupclient", (req, res) => {
   var sql =
@@ -305,7 +312,7 @@ app.post("/singupclient", (req, res) => {
     md5(req.body.matkhaus) +
     "'";
 
-    console.log(sql);
+  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) {
@@ -339,7 +346,7 @@ app.post("/singup", (req, res) => {
     req.body.matkhaus +
     "'";
 
-    console.log(sql);
+  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) {
@@ -381,14 +388,42 @@ app.post("/login", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.send({ success: true });
-      console.log(res);
+      var string = JSON.stringify(result);
+      var json = JSON.parse(string);
+      console.log(">> ID: ", json[0].idUser);
+      console.log(">> Email: ", json[0].email);
+      res.send({ success: true, IDUSER: json[0].idUser, EMAIL: json[0].email });
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);
     }
   });
 });
+
+// app.post("/login", (req, res) => {
+//   console.log("dawng nhap");
+//   var sql =
+//     "SELECT * FROM user WHERE email= '" +
+//     req.body.username +
+//     "' AND matkhau= '" +
+//     md5(req.body.password) +
+//     "'";
+
+//   con.query(sql, function (err, result, fields) {
+//     if (err) {
+//       console.log(err);
+//       res.send({ success: false, message: "Database không có kết nối!" });
+//     }
+
+//     if (result.length > 0) {
+//       res.send({ success: true });
+//       console.log(res);
+//     } else {
+//       res.send({ success: false, message: "Sai tài khoản!" });
+//       console.log(res);
+//     }
+//   });
+// });
 
 app.use(function (req, res, next) {
   res.status(404).send("404 Not Found!");
