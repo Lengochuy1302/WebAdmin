@@ -52,6 +52,25 @@ export default function Login({ navigation }) {
     }
   }
 
+  const storeDataID = async (value) => {
+    try {
+      await AsyncStorage.setItem('iduser', value)
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  const getDataID= async () => {
+    try {
+      const value = await AsyncStorage.getItem('iduser')
+      if(value !== null) {
+        console.log("ID USER "+ value)
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
+
   const checkuser = () => {
     if (tendangnhap === "" || tendangnhap === null) {
       Alert.alert("Cảnh báo", "Tên không được bỏ trống!");
@@ -72,7 +91,7 @@ export default function Login({ navigation }) {
       storeDataPass("");
     }
 
-    fetch("http://172.16.10.154:8000/login", {
+    fetch("http://192.168.1.137:8000/loginclient", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -90,6 +109,7 @@ export default function Login({ navigation }) {
       } else {
         if (res.success === true) {
           navigation.navigate('Quản lý');
+          storeDataID(res.iduser)
           AsyncStorage.getItem('key').then(value => {
             setExampleState.title == value;
             console.log(exampleState);
@@ -105,6 +125,7 @@ export default function Login({ navigation }) {
   useEffect(() => {
     getDataUser();
     getDataPass();
+    getDataID();
   }, []);
   
   return (

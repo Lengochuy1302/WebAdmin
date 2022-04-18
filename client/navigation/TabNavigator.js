@@ -15,7 +15,7 @@ const BottomTabNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Trang chủ') {
+          if (route.name === 'Yêu thích') {
             iconName = focused
               ? 'ios-information-circle-outline'
               : 'ios-information-circle-outline';
@@ -33,7 +33,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen options={{
                     tabBarIcon: () => (<Image source={require("./../assets/25694.png")} style={{width: 20, height: 20}} />)
-                , headerShown: false}} name="Trang chủ" component={DrawerNavigator} />
+                , headerShown: false}} name="Yêu thích" component={DrawerNavigator} />
       <Tab.Screen    options={{ headerStyle: {
     backgroundColor: "#f57c00",
   },  headerTintColor: "white",

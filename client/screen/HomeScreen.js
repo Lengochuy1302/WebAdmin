@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
   Button,
@@ -24,14 +25,15 @@ const Height1 = Dimensions.get("screen").height;
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  
-  const getData = async () => {
+  const getData = async (idtk) => {
+
     try {
       const response = await fetch(
-        "http://172.16.10.154:8000/ds"
+        "http://192.168.1.137:8000/getdatayeuthich/" +idtk,
       );
       const json = await response.json();
       setData(json);
+      console.log(JSON.parse(json));
     } catch (error) {
       console.error(error);
     } finally {
@@ -51,7 +53,10 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getData();
+    AsyncStorage.getItem("iduser").then((value) => {
+      getData(value);
+    });
+
   }, []);
 
   return (
@@ -66,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
             
               <TouchableOpacity
               // onPress={() =>
-              //   navigation.navigate("Chi tiết sinh viên", {
+              //   navigation.navigate("Chi tiết phòng", {
               //     id: item.id,
               //     ten: item.ten,
               //     tuoi: item.tuoi,
@@ -80,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
               // }
               >
                      <View style={{fontSize: 17, marginBottom: 0 }}>
-                  <Image style={styles.slide} source={{ uri: "http://172.16.10.154:8000/upload/" +  item.image}} />
+                  <Image style={styles.slide} source={{ uri: "http://192.168.1.137:8000/upload/" +  item.image}} />
                   <View
                     style={{
                       backgroundColor: "rgba(0, 0, 0, 0.243)",
@@ -146,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
                       fontWeight: "500",
                     }}
                   >
-                    Đ/c: {item.tinh}, {item.quan}, {item.puong}, {item.duong}
+                    Đ/c: {item.tinh}, {item.quan}, {item.phuong}, {item.duong}
                   </Text>
 
                 </View>

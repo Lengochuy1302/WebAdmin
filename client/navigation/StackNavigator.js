@@ -40,12 +40,12 @@ const MainStackNavigatorlogin = () => {
         name="Signup Screen"
         component={SignupScreen}
       />
-      <Stack.Screen name="Chi tiết sinh viên" 
+      <Stack.Screen name="Chi tiết phòng" 
       component={DetailScreen} />
       <Stack.Screen
-        options={{ headerShown: false }}
-        name="Trang Chủ"
-        component={TabNavigator}
+       
+        name="Yêu thích"
+        component={HomeScreen}
       />
       <Stack.Screen
         options={{ headerLeft: false, headerShown: false }}
@@ -60,11 +60,11 @@ const MainStackNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={screenOptionStyle}
-      initialRouteName="Trang Chủ"
+      initialRouteName="Yêu thích"
     >
       <Stack.Screen
         options={{ headerShown: false }}
-        name="Trang Chủ"
+        name="Yêu thích"
         component={HomeScreen}
         options={{
           headerLeft: false,

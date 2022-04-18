@@ -76,7 +76,7 @@ export default function Dashboard(props) {
 
   return (
     <>
-      <PageTitle title="Trang chủ" 
+      <PageTitle title="Yêu thích" 
         colorBrightness="secondary"/>
       <Grid container spacing={4}>
         <Grid item lg={3} md={4} sm={6} xs={12}>

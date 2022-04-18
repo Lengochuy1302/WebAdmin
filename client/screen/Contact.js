@@ -14,7 +14,8 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import Swipeout from "react-native-swipeout";
 import { RadioButton } from "react-native-paper";
@@ -46,11 +47,11 @@ const HomeScreen = ({ navigation }) => {
   const [iditem, setidItem] = useState("");
   const [sotrang, setsotrang] = useState(1);
   const [image, setImage] = useState(
-    "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+    "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
   );
 
   const [images, setImages] = useState(
-    "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+    "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
   );
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -84,30 +85,42 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  
+  const getDataID= async () => {
+    try {
+      const value = await AsyncStorage.getItem('iduser')
+      if(value !== null) {
+        console.log("ID USER "+ value)
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
+
   const huythem = () => {
     setImage(
-      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
     );
     setValue("Nam");
     setModalVisible(false);
   };
 
   const picktrangsau = () => {
-      setsotrang(sotrang + 1);
-      setPagetNumber(sotrang);
-      getData();
+    setsotrang(sotrang + 1);
+    setPagetNumber(sotrang);
+    getData();
   };
 
   const picktrangtruoc = () => {
-    if (1 < sotrang ) {
+    if (1 < sotrang) {
       setsotrang(sotrang - 1);
       setPagetNumber(sotrang);
       getData();
     }
     setPagetNumber(sotrang);
     getData();
-    return
-};
+    return;
+  };
 
   const onRefresh = () => {
     setLoading(true);
@@ -115,7 +128,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const addSanPham = () => {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let sd = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
     if (tenSanPham === "" || tenSanPham === null) {
       Alert.alert("Cảnh báo", "Tên không được bỏ trống!");
@@ -152,13 +166,12 @@ const HomeScreen = ({ navigation }) => {
       return;
     }
 
- 
-    if ( !re.test(email) ) {
+    if (!re.test(email)) {
       Alert.alert("Cảnh báo", "Email không hợp lệ!");
       return;
     }
 
-    if ( !sd.test(sdt) ) {
+    if (!sd.test(sdt)) {
       Alert.alert("Cảnh báo", "Số điện thoại không hợp lệ!");
       return;
     }
@@ -307,7 +320,7 @@ const HomeScreen = ({ navigation }) => {
     setemails(null);
     setsdts(null);
     setImage(
-      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
     );
   };
 
@@ -330,92 +343,93 @@ const HomeScreen = ({ navigation }) => {
 
   const getData = async () => {
     try {
-      const response = await fetch('http://172.16.10.154:8000/dssp/' + pageNumber);
+      const response = await fetch(
+        "http://192.168.1.137:8000/dssp/" + pageNumber,
+      );
       const json = await response.json();
-      console.log(json)
+      console.log(json);
       setData(json);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const onPressLearnMore = (getPage) => {
     setPagetNumber(getPage);
-    console.log(pageNumber)
+    console.log(pageNumber);
     getData();
   };
 
   useEffect(() => {
     getData();
+    getDataID();
   }, []);
 
   return (
     <View>
       <View
-      style={{ 
-      width: "100%",
-      height: 97,
-      backgroundColor: '#f57c00',
-      flexDirection: 'row'
-      }}
+        style={{
+          width: "100%",
+          height: 97,
+          backgroundColor: "#f57c00",
+          flexDirection: "row",
+        }}
       >
         <View
           style={{
-            flex:1,
+            flex: 1,
             width: 40,
             height: 40,
             borderRadius: 50,
             marginTop: 63,
-            marginLeft: 13
+            marginLeft: 13,
           }}
         >
-          <TouchableOpacity 
-          onPress={() => navigation.openDrawer()}
-          >
-            <Image
-              style={{ width: 26, height: 26 }}
-              source={Logo}
-            />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Image style={{ width: 26, height: 26 }} source={Logo} />
           </TouchableOpacity>
         </View>
-              <Text
-                     style={{
-                       flex:1,
-                      height: 40,
-                      borderRadius: 50,
-                      marginTop: 68,
-                      marginLeft: 55,
-                      fontSize: 15,
-                      fontWeight: '700',
-                      color: '#fff'
-                    }}
-              >Trang chủ</Text>
-              <View
+        <Text
           style={{
-            flex:1,
+            flex: 1,
+            height: 40,
+            borderRadius: 50,
+            marginTop: 68,
+            marginLeft: 55,
+            fontSize: 15,
+            fontWeight: "700",
+            color: "#fff",
+          }}
+        >
+          Trang chủ
+        </Text>
+        <View
+          style={{
+            flex: 1,
             width: 40,
             height: 40,
             borderRadius: 50,
             marginTop: 70,
-            marginLeft: 13
+            marginLeft: 13,
           }}
         >
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text
-               style={{
-               height: 40,
-               borderRadius: 50,
-               marginLeft: 60,
-               fontSize: 15,
-               color: '#fff'
-             }}
-          >Thêm</Text>
+          <TouchableOpacity onPress={() =>   navigation.navigate("Yêu thích")}>
+            <Text
+              style={{
+                height: 40,
+                marginEnd: 15,
+                alignSelf: "flex-end",
+                marginTop: -2,
+              }}
+            >
+              <AntDesign name="hearto" size={24} color="white" />
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{  padding: 10, marginTop: 0, height: "89%" }}>
+      <View style={{ padding: 10, marginTop: 0, height: "89%" }}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
@@ -424,22 +438,36 @@ const HomeScreen = ({ navigation }) => {
             keyExtractor={({ id }, index) => id}
             renderItem={({ item }) => (
               <TouchableOpacity
-              // onPress={() =>
-              //   navigation.navigate("Chi tiết sinh viên", {
-              //     id: item.id,
-              //     ten: item.ten,
-              //     tuoi: item.tuoi,
-              //     diachi: item.diachi,
-              //     hinhanh: item.hinhanh,
-              //     sex: item.sex,
-              //     mssv: item.mssv,
-              //     sdt: item.sdt,
-              //     gmail: item.gmail,
-              //   })
-              // }
+                onPress={() =>
+                  navigation.navigate("Chi tiết phòng", {
+                    idRoom: item.idroom,
+                    image: item.image,
+                    tenPhong: item.tenPhong,
+                    giaPhong: item.giaPhong,
+                    loaiPhong: item.idLoaiPhong,
+                    chieuDai: item.chieuDai,
+                    chieuRong: item.chieuRong,
+                    giaNuoc: item.giaNuoc,
+                    giaDien: item.giaDien,
+                    mota: item.moTa,
+                    tinh: item.tinh,
+                    quan: item.quan,
+                    phuong: item.phuong,
+                    duong: item.duong,
+                    user: item.idUser,
+                    gioiTinh: item.gioiTinh,
+                    ngayTao: item.ngayTao,
+                    luotXem: item.luotXem,
+                  })
+                }
               >
-                     <View style={{fontSize: 17, marginBottom: 10 }}>
-                  <Image style={styles.slide} source={{ uri: "http://172.16.10.154:8000/upload/" +  item.image}} />
+                <View style={{ fontSize: 17, marginBottom: 10 }}>
+                  <Image
+                    style={styles.slide}
+                    source={{
+                      uri: "http://192.168.1.137:8000/upload/" + item.image,
+                    }}
+                  />
                   <View
                     style={{
                       backgroundColor: "rgba(0, 0, 0, 0.243)",
@@ -448,18 +476,16 @@ const HomeScreen = ({ navigation }) => {
                       position: "absolute",
                       borderRadius: 10,
                     }}
-                  >
-
-                  </View>
+                  ></View>
                   <Text
                     style={{
                       color: "rgb(255, 255, 255)",
                       position: "absolute",
                       width: Width,
-                      marginTop:130,
+                      marginTop: 120,
                       marginLeft: 5,
-                      textAlign: 'left',
-                      fontSize: 20,
+                      textAlign: "left",
+                      fontSize: 25,
                       fontWeight: "800",
                     }}
                   >
@@ -470,23 +496,37 @@ const HomeScreen = ({ navigation }) => {
                       color: "rgb(255, 255, 255)",
                       position: "absolute",
                       width: Width,
-                      marginTop:160,
+                      marginTop: 150,
                       marginLeft: 5,
-                      textAlign: 'left',
+                      textAlign: "left",
                       fontSize: 15,
                       fontWeight: "500",
                     }}
                   >
-                    Giá: {item.giaPhong}    S: {item.chieuDai*item.chieuRong}m²
+                    {item.giaPhong.toLocaleString('en-US', {style : 'currency', currency : 'VND'})} - S: {item.chieuDai * item.chieuRong}m²
                   </Text>
                   <Text
                     style={{
                       color: "rgb(255, 255, 255)",
                       position: "absolute",
                       width: Width,
-                      marginTop:175,
+                      marginTop: 165,
                       marginLeft: 5,
-                      textAlign: 'left',
+                      textAlign: "left",
+                      fontSize: 15,
+                      fontWeight: "500",
+                    }}
+                  >
+                    Loại phòng: {item.idLoaiPhong}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "rgb(255, 255, 255)",
+                      position: "absolute",
+                      width: Width,
+                      marginTop: 182,
+                      marginLeft: 5,
+                      textAlign: "left",
                       fontSize: 15,
                       fontWeight: "500",
                     }}
@@ -498,16 +538,15 @@ const HomeScreen = ({ navigation }) => {
                       color: "rgb(255, 255, 255)",
                       position: "absolute",
                       width: Width,
-                      marginTop:190,
+                      marginTop: 199,
                       marginLeft: 5,
-                      textAlign: 'left',
+                      textAlign: "left",
                       fontSize: 15,
                       fontWeight: "500",
                     }}
                   >
                     Đ/c: {item.tinh}, {item.quan}, {item.puong}, {item.duong}
                   </Text>
-
                 </View>
               </TouchableOpacity>
             )}
@@ -566,12 +605,18 @@ const HomeScreen = ({ navigation }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   marginTop: -20,
-                  flexDirection: 'row'
+                  flexDirection: "row",
                 }}
               >
                 <TouchableOpacity
                   onPress={pickImage}
-                  style={{ alignItems: "center", justifyContent: "center", marginRight: 0, marginLeft: 10, marginTop: 10  }}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: 0,
+                    marginLeft: 10,
+                    marginTop: 10,
+                  }}
                 >
                   <Image
                     source={{ uri: image }}
@@ -580,59 +625,56 @@ const HomeScreen = ({ navigation }) => {
                       height: 110,
                       marginBottom: 15,
                       borderRadius: 100,
-             
+
                       zIndex: 1,
                     }}
                   />
                 </TouchableOpacity>
 
-                    <View>
-                      
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Tên sinh viên:
-              </Text>
-              <TextInput
-                style={{
-                  width: 200,
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setTenSanPham}
-                keyboardType="default"
-              />
+                <View>
+                  <Text
+                    style={{
+                      marginLeft: 12,
+                      marginBottom: -10,
+                    }}
+                  >
+                    Tên sinh viên:
+                  </Text>
+                  <TextInput
+                    style={{
+                      width: 200,
+                      height: 40,
+                      margin: 12,
+                      color: "black",
+                      backgroundColor: "#F6F7FB",
+                      borderRadius: 10,
+                      padding: 10,
+                    }}
+                    onChangeText={setTenSanPham}
+                    keyboardType="default"
+                  />
 
-              
-<Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Mã số SV:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "red",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setmasosv}
-                keyboardType="default"
-              />
-                    </View>
-
+                  <Text
+                    style={{
+                      marginLeft: 12,
+                      marginBottom: -10,
+                    }}
+                  >
+                    Mã số SV:
+                  </Text>
+                  <TextInput
+                    style={{
+                      height: 40,
+                      margin: 12,
+                      color: "red",
+                      backgroundColor: "#F6F7FB",
+                      borderRadius: 10,
+                      padding: 10,
+                    }}
+                    onChangeText={setmasosv}
+                    keyboardType="default"
+                  />
+                </View>
               </View>
               <Text
                 style={{
@@ -768,45 +810,45 @@ const HomeScreen = ({ navigation }) => {
                 keyboardType="default"
               />
               <Text
-              style={{
-                marginLeft: 12,
-                marginBottom: -10,
-              }}
-            >
-              Email:
-            </Text>
-            <TextInput
-              style={{
-                height: 40,
-                margin: 12,
-                color: "black",
-                backgroundColor: "#F6F7FB",
-                borderRadius: 10,
-                padding: 10,
-              }}
-              onChangeText={setemail}
-              keyboardType="default"
-            />
+                style={{
+                  marginLeft: 12,
+                  marginBottom: -10,
+                }}
+              >
+                Email:
+              </Text>
+              <TextInput
+                style={{
+                  height: 40,
+                  margin: 12,
+                  color: "black",
+                  backgroundColor: "#F6F7FB",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onChangeText={setemail}
+                keyboardType="default"
+              />
               <Text
-              style={{
-                marginLeft: 12,
-                marginBottom: -10,
-              }}
-            >
-              Số điện thoại:
-            </Text>
-            <TextInput
-              style={{
-                height: 40,
-                margin: 12,
-                color: "black",
-                backgroundColor: "#F6F7FB",
-                borderRadius: 10,
-                padding: 10,
-              }}
-              onChangeText={setsdt}
-              keyboardType="default"
-            />
+                style={{
+                  marginLeft: 12,
+                  marginBottom: -10,
+                }}
+              >
+                Số điện thoại:
+              </Text>
+              <TextInput
+                style={{
+                  height: 40,
+                  margin: 12,
+                  color: "black",
+                  backgroundColor: "#F6F7FB",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onChangeText={setsdt}
+                keyboardType="default"
+              />
               <View
                 style={{
                   alignItems: "center",
@@ -878,12 +920,18 @@ const HomeScreen = ({ navigation }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   marginTop: -20,
-                  flexDirection: 'row'
+                  flexDirection: "row",
                 }}
               >
                 <TouchableOpacity
                   onPress={pickImageSua}
-                  style={{ alignItems: "center", justifyContent: "center", marginRight: 0, marginLeft: 10, marginTop: 10  }}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: 0,
+                    marginLeft: 10,
+                    marginTop: 10,
+                  }}
                 >
                   <Image
                     source={{ uri: images }}
@@ -892,61 +940,58 @@ const HomeScreen = ({ navigation }) => {
                       height: 110,
                       marginBottom: 15,
                       borderRadius: 100,
-             
+
                       zIndex: 1,
                     }}
                   />
                 </TouchableOpacity>
 
-                    <View>
-                      
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Tên sinh viên:
-              </Text>
-              <TextInput
-                style={{
-                  width: 200,
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setTenSanPhams}
-                value={tenSanPhams}
-                keyboardType="default"
-              />
+                <View>
+                  <Text
+                    style={{
+                      marginLeft: 12,
+                      marginBottom: -10,
+                    }}
+                  >
+                    Tên sinh viên:
+                  </Text>
+                  <TextInput
+                    style={{
+                      width: 200,
+                      height: 40,
+                      margin: 12,
+                      color: "black",
+                      backgroundColor: "#F6F7FB",
+                      borderRadius: 10,
+                      padding: 10,
+                    }}
+                    onChangeText={setTenSanPhams}
+                    value={tenSanPhams}
+                    keyboardType="default"
+                  />
 
-              
-<Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Mã số SV:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "red",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setmasosvs}
-                value={masosvs}
-                keyboardType="default"
-              />
-                    </View>
-
+                  <Text
+                    style={{
+                      marginLeft: 12,
+                      marginBottom: -10,
+                    }}
+                  >
+                    Mã số SV:
+                  </Text>
+                  <TextInput
+                    style={{
+                      height: 40,
+                      margin: 12,
+                      color: "red",
+                      backgroundColor: "#F6F7FB",
+                      borderRadius: 10,
+                      padding: 10,
+                    }}
+                    onChangeText={setmasosvs}
+                    value={masosvs}
+                    keyboardType="default"
+                  />
+                </View>
               </View>
               {/* <View
                 style={{
@@ -1127,48 +1172,48 @@ const HomeScreen = ({ navigation }) => {
                 value={diachis}
                 keyboardType="default"
               />
-             <Text
-              style={{
-                marginLeft: 12,
-                marginBottom: -10,
-              }}
-            >
-              Email:
-            </Text>
-            <TextInput
-              style={{
-                height: 40,
-                margin: 12,
-                color: "black",
-                backgroundColor: "#F6F7FB",
-                borderRadius: 10,
-                padding: 10,
-              }}
-              onChangeText={setemails}
-              value={emails}
-              keyboardType="default"
-            />
               <Text
-              style={{
-                marginLeft: 12,
-                marginBottom: -10,
-              }}
-            >
-              Số điện thoại:
-            </Text>
-            <TextInput
-              style={{
-                height: 40,
-                margin: 12,
-                color: "black",
-                backgroundColor: "#F6F7FB",
-                borderRadius: 10,
-                padding: 10,
-              }}
-              onChangeText={setsdts}
-              value={sdts}
-              keyboardType="default"
-            />
+                style={{
+                  marginLeft: 12,
+                  marginBottom: -10,
+                }}
+              >
+                Email:
+              </Text>
+              <TextInput
+                style={{
+                  height: 40,
+                  margin: 12,
+                  color: "black",
+                  backgroundColor: "#F6F7FB",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onChangeText={setemails}
+                value={emails}
+                keyboardType="default"
+              />
+              <Text
+                style={{
+                  marginLeft: 12,
+                  marginBottom: -10,
+                }}
+              >
+                Số điện thoại:
+              </Text>
+              <TextInput
+                style={{
+                  height: 40,
+                  margin: 12,
+                  color: "black",
+                  backgroundColor: "#F6F7FB",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onChangeText={setsdts}
+                value={sdts}
+                keyboardType="default"
+              />
 
               <View
                 style={{
@@ -1194,7 +1239,6 @@ const HomeScreen = ({ navigation }) => {
         </Modal>
         <View
           style={{
-            
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
@@ -1215,9 +1259,9 @@ const HomeScreen = ({ navigation }) => {
             }}
           >
             <Text
-             style={{
-             color: 'orange'
-            }}
+              style={{
+                color: "orange",
+              }}
             ></Text>
           </View>
           <Button
@@ -1228,7 +1272,6 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      
     </View>
   );
 };

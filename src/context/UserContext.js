@@ -56,7 +56,7 @@ const refreshPage = () => {
 };
 
 function loginUser(dispatch, login, password, history, setIsLoading, setError) {
-  fetch("http://172.16.10.154:8000/login", {
+  fetch("http://192.168.1.137:8000/login", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -96,7 +96,7 @@ function signUp(dispatch,email, login, password, history, setIsLoading, setError
   return;
 }
 
-fetch("http://172.16.10.154:8000/singup", {
+fetch("http://192.168.1.137:8000/singup", {
   method: "POST",
   headers: {
     Accept: "application/json",

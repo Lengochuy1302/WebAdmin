@@ -51,16 +51,6 @@ app.get("/userhost", (req, res) => {
   );
 });
 
-app.get("/dssv/:ids", (req, res) => {
-  con.query(
-    "SELECT * FROM sinhvien WHERE id" + req.params.ids,
-    function (err, result, fields) {
-      if (err) throw err;
-      res.send(result);
-    },
-  );
-});
-
 // hiển thị ds bảng sv theo khoảng id
 app.get("/dssp/:id", (req, res) => {
   var limit = 3;
@@ -303,6 +293,72 @@ app.post("/updateProduc", (req, res) => {
   });
 });
 
+//them yeu thich
+app.post("/yeuthich", (req, res) => {
+  var sql = "SELECT * FROM yeuthich WHERE idRoom = '" + req.body.phongtro + "'";
+
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) {
+      console.log(err);
+      res.send({ success: false, message: "Database không có kết nối!" });
+    }
+
+    if (result.length > 0) {
+      res.send({ success: false, message: "Phòng đã có trong mục yêu thích" });
+    } else {
+      res.send({ success: true, message: "Phòng đã thêm vào mục yêu thích" });
+      var sql =
+        "INSERT INTO yeuthich (idUser, idRoom) values('" +
+        req.body.taikhoan +
+        "','" +
+        req.body.phongtro +
+        "');";
+      con.query(sql, function (err, result, fields) {
+        if (err) throw err;
+      });
+    }
+  });
+});
+
+//hien thi ds yeu thich
+app.get("/dsyeuthich/:ids", (req, res) => {
+  con.query(
+    "SELECT * FROM room WHERE idRoom=" + req.params.ids,
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
+});
+
+//get data room yeu thich
+app.get("/getdatayeuthich/:iduser", (req, res) => {
+  var sql = "SELECT * FROM yeuthich WHERE idUser=" + req.params.iduser;
+  console.log(sql);
+  var count = 0;
+  var list=[];
+  con.query(sql, function (err, result, fields) {
+    result.map((item, index) => {
+      const idPhong = item.idRoom;
+      console.log(idPhong);
+      var sql = "SELECT * FROM room WHERE idRoom=" + idPhong;
+      console.log(sql);
+      con.query(sql, function (err, data, fields) {
+      count = count + 1;
+      list.push(data)
+      if (result.length == count) {
+        // list.push(data);
+        console.log("listdủ: "+JSON.stringify(list));
+        res.send(list);
+       }
+
+      });
+    })
+  });
+});
+
 // singup
 app.post("/singupclient", (req, res) => {
   var sql =
@@ -390,9 +446,22 @@ app.post("/login", (req, res) => {
     if (result.length > 0) {
       var string = JSON.stringify(result);
       var json = JSON.parse(string);
-      console.log(">> ID: ", json[0].idUser);
-      console.log(">> Email: ", json[0].email);
-      res.send({ success: true, IDUSER: json[0].idUser, EMAIL: json[0].email });
+      console.log("Thành viên: " + json[0].thanhVien);
+      if (json[0].thanhVien === "admin" || json[0].thanhVien === "host") {
+        console.log(">> ID: ", json[0].idUser);
+        console.log(">> Email: ", json[0].email);
+        res.send({
+          success: true,
+          IDUSER: json[0].idUser,
+          EMAIL: json[0].email,
+        });
+      } else {
+        res.send({
+          success: false,
+          message: "Vui lòng đăng nhập tài khoản này ở app",
+        });
+        console.log(res);
+      }
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);
@@ -400,30 +469,42 @@ app.post("/login", (req, res) => {
   });
 });
 
-// app.post("/login", (req, res) => {
-//   console.log("dawng nhap");
-//   var sql =
-//     "SELECT * FROM user WHERE email= '" +
-//     req.body.username +
-//     "' AND matkhau= '" +
-//     md5(req.body.password) +
-//     "'";
+app.post("/loginclient", (req, res) => {
+  console.log("dawng nhap");
+  var sql =
+    "SELECT * FROM user WHERE email= '" +
+    req.body.username +
+    "' AND matkhau= '" +
+    md5(req.body.password) +
+    "'";
 
-//   con.query(sql, function (err, result, fields) {
-//     if (err) {
-//       console.log(err);
-//       res.send({ success: false, message: "Database không có kết nối!" });
-//     }
+  con.query(sql, function (err, result, fields) {
+    if (err) {
+      console.log(err);
+      res.send({ success: false, message: "Database không có kết nối!" });
+    }
 
-//     if (result.length > 0) {
-//       res.send({ success: true });
-//       console.log(res);
-//     } else {
-//       res.send({ success: false, message: "Sai tài khoản!" });
-//       console.log(res);
-//     }
-//   });
-// });
+    if (result.length > 0) {
+      var string = JSON.stringify(result);
+      var json = JSON.parse(string);
+      console.log("Thành viên: " + json[0].thanhVien);
+      var idusers = JSON.stringify(json[0].idUser);
+      if (json[0].thanhVien === "member") {
+        res.send({ success: true, iduser: idusers });
+        console.log(res);
+      } else {
+        res.send({
+          success: false,
+          message: "Vui lòng đăng nhập tài khoản này ở web admin",
+        });
+        console.log(res);
+      }
+    } else {
+      res.send({ success: false, message: "Sai tài khoản!" });
+      console.log(res);
+    }
+  });
+});
 
 app.use(function (req, res, next) {
   res.status(404).send("404 Not Found!");
@@ -432,3 +513,5 @@ app.use(function (req, res, next) {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+

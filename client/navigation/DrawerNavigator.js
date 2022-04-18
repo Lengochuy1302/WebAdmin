@@ -43,8 +43,7 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={screenOptionStyle}
     >
-      <Drawer.Screen name="Trang chủ" component={HomeScreen} />
-      <Drawer.Screen name="Cài đặt" component={ContactStackNavigator} />
+      <Drawer.Screen name="Yêu thích" component={HomeScreen} />
     </Drawer.Navigator>
   );
 };
@@ -60,6 +59,8 @@ const DrawerNavigatorquanly = () => {
         headerShown: false,
       }}
       name="Quản lý" component={Contact} />
+            <Drawer.Screen
+      name="Yêu thích" component={HomeScreen} />
     </Drawer.Navigator>
   );
 };
