@@ -31,6 +31,29 @@ app.get("/ds", (req, res) => {
   });
 });
 
+app.get("/dsuser", (req, res) => {
+  con.query("SELECT * FROM `user` WHERE thanhVien != 'admin'", function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+app.post("/addtrangthai", (req, res, next) => {
+
+  var sql =
+    "UPDATE user SET trangThai='"+ req.body.trangThai +"' WHERE idUser= '"+   req.body.idTrangThai +"'";
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result == "ok") {
+      console.log(result);
+      res.send("ok");
+    }
+  });
+});
+
+
 app.get("/usermember", (req, res) => {
   con.query(
     "SELECT * FROM `user` WHERE thanhVien = 'member'",

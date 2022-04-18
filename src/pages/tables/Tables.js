@@ -7,6 +7,7 @@ import PageTitle from "../../components/PageTitle";
 import Widget from "../../components/Widget";
 import Table from "../dashboard/components/Table/Table";
 import { addRoom } from "../../context/UserContext";
+import Switch from "react-input-switch";
 // data
 import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
@@ -96,13 +97,57 @@ export default function Tables(props) {
   // };
   // const [id, setid] = React.useState("");
   const [dataPost, setDataPost] = React.useState([]);
+  const [dataUSER, setDataUSER] = React.useState([]);
   const getDataPost = async () => {
     const baseUrl = "http://localhost:8000/ds";
     const response = await axios.get(baseUrl);
     setDataPost(response.data);
   };
+  const getDataUSER = async () => {
+    const baseUrl = "http://localhost:8000/dsuser";
+    const response = await axios.get(baseUrl);
+    setDataUSER(response.data);
+  };
+
+  const editTrangThaiKhoa = (id, trangthai) => {
+    if (trangthai == "Tạm khóa") {
+      return;
+    }
+    fetch("http://192.168.1.137:8000/addtrangthai", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idTrangThai: id,
+        trangThai: "Tạm khóa",
+      }),
+    }).then((response) => {});
+    refreshPage();
+  };
+
+  const editTrangThaiMo = (id, trangthai) => {
+    if (trangthai == "Hoạt động") {
+      return;
+    }
+    fetch("http://192.168.1.137:8000/addtrangthai", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idTrangThai: id,
+        trangThai: "Hoạt động",
+      }),
+    }).then((response) => {});
+    refreshPage();
+  };
+
   useEffect(() => {
     getDataPost();
+    getDataUSER();
   }, []);
 
   const refreshPage = () => {
@@ -131,7 +176,9 @@ export default function Tables(props) {
       name: "",
       options: {
         filter: false,
-        setCellProps: () => ({ style: {  minWidth: "100px", maxWidth: "100px" } }),
+        setCellProps: () => ({
+          style: { minWidth: "100px", maxWidth: "100px" },
+        }),
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
@@ -195,7 +242,7 @@ export default function Tables(props) {
       name: "",
       options: {
         filter: false,
-        setCellProps: () => ({ style: {  minWidth: "80px", maxWidth: "80px" } }),
+        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
@@ -226,7 +273,7 @@ export default function Tables(props) {
       name: "",
       options: {
         filter: false,
-        setCellProps: () => ({ style: {  minWidth: "80px", maxWidth: "80px" } }),
+        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
@@ -283,7 +330,7 @@ export default function Tables(props) {
       label: "Tên phòng",
       options: {
         filter: false,
-        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: true,
       },
     },
@@ -291,7 +338,8 @@ export default function Tables(props) {
       name: "giaPhong",
       label: "Giá phòng",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: true,
       },
     },
@@ -299,7 +347,8 @@ export default function Tables(props) {
       name: "giaNuoc",
       label: "Giá nước",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: true,
       },
     },
@@ -307,7 +356,8 @@ export default function Tables(props) {
       name: "giaDien",
       label: "Giá điện",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: true,
       },
     },
@@ -315,7 +365,8 @@ export default function Tables(props) {
       name: "gioiTinh",
       label: "Giới tính",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -323,7 +374,8 @@ export default function Tables(props) {
       name: "idLoaiPhong",
       label: "Loại phòng",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -331,7 +383,8 @@ export default function Tables(props) {
       name: "chieuDai",
       label: "Chiều dài",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -339,7 +392,8 @@ export default function Tables(props) {
       name: "chieuRong",
       label: "Chiều rộng",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -347,7 +401,8 @@ export default function Tables(props) {
       name: "tinh",
       label: "Tỉnh thành",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -355,7 +410,8 @@ export default function Tables(props) {
       name: "quan",
       label: "Quận huyện",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -363,7 +419,8 @@ export default function Tables(props) {
       name: "phuong",
       label: "Phường xã",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -371,7 +428,8 @@ export default function Tables(props) {
       name: "duong",
       label: "Đường/ Số nhà",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -379,7 +437,8 @@ export default function Tables(props) {
       name: "idTienIch",
       label: "Tiện ích",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px"  } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
         display: false,
         customBodyRender: (name) => {
@@ -391,7 +450,8 @@ export default function Tables(props) {
       name: "idUser",
       label: "Người đăng",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -399,7 +459,8 @@ export default function Tables(props) {
       name: "ngayTao",
       label: "Ngày đăng",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: true,
       },
     },
@@ -407,7 +468,8 @@ export default function Tables(props) {
       name: "kiemDuyet",
       label: "Kiểm duyệt",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -415,7 +477,8 @@ export default function Tables(props) {
       name: "xacThuc",
       label: "Xác thực",
       options: {
-        filter: true,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: true,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -423,7 +486,8 @@ export default function Tables(props) {
       name: "luotXem",
       label: "Lượt xem",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -431,7 +495,8 @@ export default function Tables(props) {
       name: "moTa",
       label: "Mô tả",
       options: {
-        filter: false,        setCellProps: () => ({ style: {  minWidth: "170px",   } }),
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
       },
     },
@@ -446,29 +511,116 @@ export default function Tables(props) {
   };
 
   const datatableDataUser = [
-    [
-      "Admin",
-      "Admin",
-      "admin@gmail.com",
-      "0905.196.052",
-      "https://1.bp.blogspot.com/-n_bFzL9lPUU/Xp23H9Sk8yI/AAAAAAAAhyA/JYfvZhwguxc8vT_YS3w14Xi3YWf3hxqIQCLcBGAsYHQ/s1600/Hinh-Anh-Dep-Tren-Mang%2B%25282%2529.jpg",
-      "Nam",
-      "Admin",
-    ],
-    [
-      "Nguyễn Duy Tài",
-      "Nguyenduytai",
-      "ndt3444@gmail.com",
-      "0323.445.765",
-      "https://1.bp.blogspot.com/-n_bFzL9lPUU/Xp23H9Sk8yI/AAAAAAAAhyA/JYfvZhwguxc8vT_YS3w14Xi3YWf3hxqIQCLcBGAsYHQ/s1600/Hinh-Anh-Dep-Tren-Mang%2B%25282%2529.jpg",
-      "Nam",
-      "Chủ trọ",
-    ],
-  ];
-
-  const datatableDataTienIch = [
-    ["Máy lạnh", "icon-may-lanh"],
-    ["Nguyễn Duy Tài", "Nguyenduytai"],
+    {
+      name: "idUser",
+      label: "ID User",
+      options: {
+        filter: false,
+        sort: true,
+        display: false,
+      },
+    },
+    {
+      name: "email",
+      label: "Email",
+      options: {
+        filter: false,
+        sort: true,
+      },
+    },
+    {
+      name: "thanhVien",
+      label: "Chức vụ",
+      options: {
+        filter: false,
+        sort: true,
+      },
+    },
+    {
+      name: "matKhau",
+      label: "Mật khẩu",
+      options: {
+        filter: false,
+        sort: true,
+        customBodyRender: (name) => {
+          return <text>{name.substring(0, 10)}**********</text>;
+        },
+      },
+    },
+    {
+      name: "trangThai",
+      label: "Trạng Thái",
+      options: {
+        filter: false,
+        setCellProps: () => ({
+          style: { minWidth: "120px", maxWidth: "120px" },
+        }),
+        sort: true,
+      },
+    },
+    {
+      name: "",
+      options: {
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <FormControlLabel
+              control={
+                <>
+                  <IconButton
+                    startIcon={<CloudUploadIcon />}
+                    variant="contained"
+                    size="large"
+                    onClick={() =>
+                      editTrangThaiKhoa(
+                        dataUSER[tableMeta.rowIndex].idUser,
+                        dataUSER[tableMeta.rowIndex].trangThai,
+                      )
+                    }
+                  >
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                  </IconButton>
+                </>
+              }
+            />
+          );
+        },
+      },
+    },
+    {
+      name: "",
+      options: {
+        filter: false,
+        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <FormControlLabel
+              control={
+                <>
+                  <IconButton
+                    startIcon={<CloudUploadIcon />}
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    onClick={() =>
+                      editTrangThaiMo(
+                        dataUSER[tableMeta.rowIndex].idUser,
+                        dataUSER[tableMeta.rowIndex].trangThai,
+                      )
+                    }
+                  >
+                    <i class="fa fa-unlock" aria-hidden="true"></i>
+                  </IconButton>
+                </>
+              }
+            />
+          );
+        },
+      },
+    },
   ];
 
   return (
@@ -496,16 +648,8 @@ export default function Tables(props) {
         <Grid item xs={12}>
           <MUIDataTable
             title="Quản lý username"
-            data={datatableDataUser}
-            columns={[
-              "Tên Người Dùng",
-              "Tên đăng nhập",
-              "Email",
-              "Số điện thoại",
-              "Avartar",
-              "Giới tính",
-              "Chức vụ",
-            ]}
+            data={dataUSER}
+            columns={datatableDataUser}
             options={options}
           />
         </Grid>
