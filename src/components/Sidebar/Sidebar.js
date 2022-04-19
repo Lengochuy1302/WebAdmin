@@ -11,6 +11,7 @@ import {
   HelpOutline as FAQIcon,
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
+import "font-awesome/css/font-awesome.min.css";
 import { useTheme } from "@material-ui/styles";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
@@ -46,9 +47,9 @@ const structure = [
   // },
   {
     id: 4,
-    label: "Google Map",
-    link: "/app/ui/maps",
-    icon: <UIElementsIcon />,
+    label: "Bộ phận hỗ trợ",
+    link: "/app/ui/icons",
+    icon:<i class="fa fa-comments" style={{fontSize: 25}} aria-hidden="true"></i>,
  
   },
 
