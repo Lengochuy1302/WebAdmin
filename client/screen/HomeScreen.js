@@ -33,7 +33,6 @@ const HomeScreen = ({ navigation }) => {
       );
       const json = await response.json();
       setData(json);
-      console.log(JSON.parse(json));
     } catch (error) {
       console.error(error);
     } finally {
@@ -49,7 +48,9 @@ const HomeScreen = ({ navigation }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    getData();
+    AsyncStorage.getItem("iduser").then((value) => {
+      getData(value);
+    });
   };
 
   useEffect(() => {
@@ -70,19 +71,28 @@ const HomeScreen = ({ navigation }) => {
           renderItem={({ item }) => (
             
               <TouchableOpacity
-              // onPress={() =>
-              //   navigation.navigate("Chi tiết phòng", {
-              //     id: item.id,
-              //     ten: item.ten,
-              //     tuoi: item.tuoi,
-              //     diachi: item.diachi,
-              //     hinhanh: item.hinhanh,
-              //     sex: item.sex,
-              //     mssv: item.mssv,
-              //     sdt: item.sdt,
-              //     gmail: item.gmail,
-              //   })
-              // }
+              onPress={() =>
+                navigation.navigate("Chi tiết phòng", {
+                  idRoom: item.idroom,
+                  image: item.image,
+                  tenPhong: item.tenPhong,
+                  giaPhong: item.giaPhong,
+                  loaiPhong: item.idLoaiPhong,
+                  chieuDai: item.chieuDai,
+                  chieuRong: item.chieuRong,
+                  giaNuoc: item.giaNuoc,
+                  giaDien: item.giaDien,
+                  mota: item.moTa,
+                  tinh: item.tinh,
+                  quan: item.quan,
+                  phuong: item.phuong,
+                  duong: item.duong,
+                  user: item.idUser,
+                  gioiTinh: item.gioiTinh,
+                  ngayTao: item.ngayTao,
+                  luotXem: item.luotXem,
+                })
+              }
               >
                      <View style={{fontSize: 17, marginBottom: 0 }}>
                   <Image style={styles.slide} source={{ uri: "http://192.168.1.137:8000/upload/" +  item.image}} />

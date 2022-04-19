@@ -36,20 +36,43 @@ import BigStat from "./components/BigStat/BigStat";
 
 const mainChartData = getMainChartData();
 const PieChartData = [
-  { name: "FaceBook",value:30.0,color: "primary", },
+  { name: "FaceBook", value: 30.0, color: "primary" },
   { name: "YouTube", value: 10.0, color: "secondary" },
-  { name: "WebSite", value: 55.9 , color: "warning" },
-  { name: "Telegram", value: 4.1 , color: "primary" },
+  { name: "WebSite", value: 55.9, color: "warning" },
+  { name: "Telegram", value: 4.1, color: "primary" },
 ];
 
 export default function Dashboard(props) {
   var classes = useStyles();
   var theme = useTheme();
   const [dataPost, setDataPost] = React.useState([]);
+  const [view, setdataview] = React.useState(0);
+
+  const getDataHostt = async (id_token) => {
+    const baseUrl = "http://localhost:8000/dshost/" + id_token;
+    const response = await axios.get(baseUrl);
+    setDataPost(response.data);
+  };
   const getDataPost = async () => {
     const baseUrl = "http://localhost:8000/ds";
     const response = await axios.get(baseUrl);
     setDataPost(response.data);
+  };
+
+  const getDataHosttView = async (id_token) => {
+    const baseUrl = "http://localhost:8000/dshostview/" + id_token;
+    axios.get(baseUrl).then((response) => {
+      setdataview(response.data);
+      console.log(response);
+    });
+  };
+
+  const getDataPostView = async () => {
+    const baseUrl = "http://localhost:8000/dsview";
+    axios.get(baseUrl).then((response) => {
+      setdataview(response.data);
+      console.log(response);
+    });
   };
 
   const [datamember, setDataMember] = React.useState([]);
@@ -67,7 +90,15 @@ export default function Dashboard(props) {
   };
 
   useEffect(() => {
-    getDataPost();
+    const thanhvien = localStorage.getItem("thanhvien_token");
+    const id = localStorage.getItem("id_token");
+    if (thanhvien === "host") {
+      getDataHostt(id);
+      getDataHosttView(id);
+    } else {
+      getDataPost();
+      getDataPostView();
+    }
     getDataMember();
     getDataHost();
   }, []);
@@ -76,8 +107,7 @@ export default function Dashboard(props) {
 
   return (
     <>
-      <PageTitle title="Thống kê" 
-        colorBrightness="secondary"/>
+      <PageTitle title="Thống kê" colorBrightness="secondary" />
       <Grid container spacing={4}>
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget
@@ -93,10 +123,7 @@ export default function Dashboard(props) {
               <LineChart
                 width={270}
                 height={30}
-                data={[
-                  { value: 0 },
-                  { value: dataPost.length },
-                ]}
+                data={[{ value: 0 }, { value: dataPost.length }]}
                 margin={{ left: theme.spacing(2) }}
               >
                 <Line
@@ -148,7 +175,6 @@ export default function Dashboard(props) {
             className={classes.card}
             bodyClass={classes.fullHeightBody}
           >
-      
             <div className={classes.progressSection}>
               <Typography
                 size="md"
@@ -190,7 +216,6 @@ export default function Dashboard(props) {
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget
             title="Lượt Xem Trung Bình"
-            
             colorBrightness="secondary"
             upperTitle
             className={classes.card}
@@ -202,11 +227,10 @@ export default function Dashboard(props) {
                 colorBrightness="secondary"
                 className={classes.serverOverviewElementText}
               >
-                1500  <i class="fa fa-eye" aria-hidden="true"></i>
+                {view} <i class="fa fa-eye" aria-hidden="true"></i>
               </Typography>
             </div>
             <div className={classes.serverOverviewElement}>
-        
               <div className={classes.serverOverviewElementChartWrapper}>
                 <ResponsiveContainer height={90} width="99%">
                   <AreaChart data={getRandomData(10)}>
@@ -234,7 +258,7 @@ export default function Dashboard(props) {
                   color="text"
                   colorBrightness="secondary"
                 >
-                 Lượt Truy Cập Từ Các Thiết Bị
+                  Lượt Truy Cập Từ Các Thiết Bị
                 </Typography>
                 <div className={classes.mainChartHeaderLabels}>
                   <div className={classes.mainChartHeaderLabel}>
@@ -258,7 +282,7 @@ export default function Dashboard(props) {
                 </div>
                 <Select
                   value={mainChartState}
-                  onChange={e => setMainChartState(e.target.value)}
+                  onChange={(e) => setMainChartState(e.target.value)}
                   input={
                     <OutlinedInput
                       labelWidth={0}
@@ -270,7 +294,6 @@ export default function Dashboard(props) {
                   }
                   autoWidth
                 >
-                   
                   <MenuItem value="daily">Theo Ngày</MenuItem>
                   <MenuItem value="monthly">Theo Tuần</MenuItem>
                   <MenuItem value="weekly">Theo Tháng</MenuItem>
@@ -278,7 +301,6 @@ export default function Dashboard(props) {
                 </Select>
               </div>
             }
-            
           >
             <ResponsiveContainer width="100%" minWidth={500} height={350}>
               <ComposedChart
@@ -292,7 +314,7 @@ export default function Dashboard(props) {
                   tickLine={false}
                 />
                 <XAxis
-                  tickFormatter={i => i + 1}
+                  tickFormatter={(i) => i + 1}
                   tick={{ fill: theme.palette.text.hint + "80", fontSize: 14 }}
                   stroke={theme.palette.text.hint + "80"}
                   tickLine={false}
@@ -327,7 +349,6 @@ export default function Dashboard(props) {
             </ResponsiveContainer>
           </Widget>
         </Grid>
-
       </Grid>
     </>
   );

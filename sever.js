@@ -25,36 +25,76 @@ con.connect(function (err) {
 });
 
 app.get("/ds", (req, res) => {
-  con.query("SELECT * FROM room", function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
+  con.query(
+    "SELECT * FROM room ORDER BY idroom desc",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
 });
 
-
+app.get("/dsview", (req, res) => {
+  con.query(
+    "SELECT * FROM room ORDER BY idroom desc",
+    function (err, result, fields) {
+      var string = JSON.stringify(result);
+      var json = JSON.parse(string);
+      var i;
+      var tong = 0;
+      for (i = 0; i < result.length; i++) {
+        console.log(i + ": " + json[i].luotXem);
+        tong = tong + json[i].luotXem;
+      }
+      if (err) throw err;
+      res.send("" + tong);
+    },
+  );
+});
 
 app.get("/dsuser", (req, res) => {
-  con.query("SELECT * FROM `user` WHERE thanhVien != 'admin'", function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
+  con.query(
+    "SELECT * FROM `user` WHERE thanhVien != 'admin' ORDER BY idUser desc",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
 });
 
 app.post("/addtrangthai", (req, res, next) => {
-
   var sql =
-    "UPDATE user SET trangThai='"+ req.body.trangThai +"' WHERE idUser= '"+   req.body.idTrangThai +"'";
+    "UPDATE user SET trangThai='" +
+    req.body.trangThai +
+    "' WHERE idUser= '" +
+    req.body.idTrangThai +
+    "'";
   console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     if (result == "ok") {
-      console.log(result);
       res.send("ok");
     }
   });
 });
 
+app.post("/updateView", (req, res, next) => {
+  var sql =
+    "UPDATE room SET luotXem='" +
+    req.body.viewCount +
+    "' WHERE idroom= '" +
+    req.body.idRoomView +
+    "'";
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result == "ok") {
+      res.send("ok");
+    }
+  });
+});
 
 app.get("/usermember", (req, res) => {
   con.query(
@@ -88,12 +128,36 @@ app.get("/dssp/:id", (req, res) => {
   });
 });
 
-
 app.get("/dshost/:idhost", (req, res) => {
-  con.query("SELECT * FROM room WHERE idUser = "+ req.params.idhost, function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
+  con.query(
+    "SELECT * FROM room WHERE idUser = " +
+      req.params.idhost +
+      " ORDER BY idroom desc",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
+});
+
+app.get("/dshostview/:idhost", (req, res) => {
+  con.query(
+    "SELECT * FROM room WHERE idUser = " +
+      req.params.idhost +
+      " ORDER BY idroom desc",
+    function (err, result, fields) {
+      var string = JSON.stringify(result);
+      var json = JSON.parse(string);
+      var i;
+      var tong = 0;
+      for (i = 0; i < result.length; i++) {
+        console.log(i + ": " + json[i].luotXem);
+        tong = tong + json[i].luotXem;
+      }
+      if (err) throw err;
+      res.send("" + tong);
+    },
+  );
 });
 
 const multer = require("multer");
@@ -371,24 +435,45 @@ app.get("/getdatayeuthich/:iduser", (req, res) => {
   var sql = "SELECT * FROM yeuthich WHERE idUser=" + req.params.iduser;
   console.log(sql);
   var count = 0;
-  var list=[];
+  var list = [];
   con.query(sql, function (err, result, fields) {
     result.map((item, index) => {
       const idPhong = item.idRoom;
       console.log(idPhong);
-      var sql = "SELECT * FROM room WHERE idRoom=" + idPhong;
+      var sql = "SELECT * FROM room WHERE idRoom = " + idPhong;
       console.log(sql);
       con.query(sql, function (err, data, fields) {
-      count = count + 1;
-      list.push(data)
-      if (result.length == count) {
-        // list.push(data);
-        console.log("listdủ: "+JSON.stringify(list));
-        res.send(list);
-       }
+        data.map((item, index) => { 
+          console.log(item.tenPhong);
+          var itemnew = {
+            idroom: item.idroom,
+            image: item.image,
+            tenPhong: item.tenPhong,
+            giaPhong: item.giaPhong,
+            loaiPhong: item.loaiPhong,
+            chieuDai: item.chieuDai,
+            chieuRong: item.chieuRong,
+            giaNuoc: item.giaNuoc,
+            giaDien: item.giaDien,
+            moTa: item.moTa,
+            tinh: item.tinh,
+            quan: item.quan,
+            phuong: item.phuong,
+            duong: item.duong,
+            user: item.idUser,
+            gioiTinh: item.gioiTinh,
+            ngayTao: item.ngayTao,
+            luotXem: item.luotXem,
+          };
+          list.push(itemnew);
+          count = count + 1;
+          if (result.length == count) {
+            res.send(list);
+          }
+        });
 
       });
-    })
+    });
   });
 });
 
@@ -499,10 +584,12 @@ app.post("/login", (req, res) => {
           console.log(res);
         }
       } else {
-        res.send({ success: false, message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ." });
+        res.send({
+          success: false,
+          message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ.",
+        });
         console.log(res);
       }
- 
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);
@@ -542,10 +629,12 @@ app.post("/loginclient", (req, res) => {
           console.log(res);
         }
       } else {
-        res.send({ success: false, message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ." });
+        res.send({
+          success: false,
+          message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ.",
+        });
         console.log(res);
       }
- 
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);
@@ -560,5 +649,3 @@ app.use(function (req, res, next) {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
-

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
@@ -13,6 +13,7 @@ import {
   Modal,
   StyleSheet,
   Image,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -56,51 +57,47 @@ const DetailScreen = ({ route }) => {
     setidtaikhoan(value);
     setidphongtro(IdRoom);
   });
-  console.log("Tai khoan id " + idtaikhoan);
-  console.log("Phong id " + idphongtro);
-  var HinhAnh = JSON.stringify(image);
-  var TenPhong = JSON.stringify(tenPhong);
-  var GiaPhong = JSON.stringify(giaPhong);
-  var LoaiPhong = JSON.stringify(loaiPhong);
-  var ChieuDai = JSON.stringify(chieuDai);
-  var ChieuRong = JSON.stringify(chieuRong);
-  var GiaNuoc = JSON.stringify(giaNuoc);
-  var GiaDien = JSON.stringify(giaDien);
-  var MoTa = JSON.stringify(mota);
-  var Tinh = JSON.stringify(tinh);
-  var Quan = JSON.stringify(quan);
-  var Phuong = JSON.stringify(phuong);
-  var Duong = JSON.stringify(duong);
-  var User = JSON.stringify(user);
-  var GioiTinh = JSON.stringify(gioiTinh);
-  var NgayTao = JSON.stringify(ngayTao);
-  var LuotXem = JSON.stringify(luotXem);
   var itemnew = {
-    idRoom: JSON.parse(IdRoom),
-    image: JSON.parse(HinhAnh),
-    tenPhong: JSON.parse(TenPhong),
-    giaPhong: JSON.parse(GiaPhong),
-    loaiPhong: JSON.parse(LoaiPhong),
-    chieuDai: JSON.parse(ChieuDai),
-    chieuRong: JSON.parse(ChieuRong),
-    giaNuoc: JSON.parse(GiaNuoc),
-    giaDien: JSON.parse(GiaDien),
-    mota: JSON.parse(MoTa),
-    tinh: JSON.parse(Tinh),
-    quan: JSON.parse(Quan),
-    phuong: JSON.parse(Phuong),
-    duong: JSON.parse(Duong),
-    user: JSON.parse(User),
-    gioiTinh: JSON.parse(GioiTinh),
-    ngayTao: JSON.parse(NgayTao),
-    luotXem: JSON.parse(LuotXem),
+    idRoom: idRoom,
+    image: image,
+    tenPhong: tenPhong,
+    giaPhong: giaPhong,
+    loaiPhong: loaiPhong,
+    chieuDai: chieuDai,
+    chieuRong: chieuRong,
+    giaNuoc: giaNuoc,
+    giaDien: giaDien,
+    mota: mota,
+    tinh: tinh,
+    quan: quan,
+    phuong: phuong,
+    duong: duong,
+    user: user,
+    gioiTinh: gioiTinh,
+    ngayTao: ngayTao,
+    luotXem: luotXem,
   };
-  function formatCash(str) {
-    return str.split('').reverse().reduce((prev, next, index) => {
-      return ((index % 3) ? next : (next + ',')) + prev
-    })
- }
   DATA2.push(itemnew);
+
+  useEffect(() => {
+    const {
+      idRoom,
+      luotXem,
+    } = route.params;
+    console.log("Phong id " + idRoom);
+        fetch("http://192.168.1.137:8000/updateView", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idRoomView: idRoom,
+        viewCount: luotXem + 1,
+      }),
+    }) 
+  }, []);
+
   const addYeuThich = () => {
     fetch("http://192.168.1.137:8000/yeuthich", {
       method: "POST",
@@ -128,6 +125,9 @@ const DetailScreen = ({ route }) => {
             renderItem={({ item }) => {
               return (
                 <View style={{ fontSize: 17, marginBottom: 0 }}>
+                  <ScrollView
+                  style={{height: Height+Height/2}}
+                  >
                   <Image
                     style={styles.slide}
                     source={{
@@ -436,6 +436,8 @@ const DetailScreen = ({ route }) => {
                  {item.mota}
                   </Text>
                   </View>
+                  </ScrollView>
+                 
                 </View>
               );
             }}

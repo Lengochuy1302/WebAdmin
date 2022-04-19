@@ -14,7 +14,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import Swipeout from "react-native-swipeout";
@@ -85,17 +85,16 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  
-  const getDataID= async () => {
+  const getDataID = async () => {
     try {
-      const value = await AsyncStorage.getItem('iduser')
-      if(value !== null) {
-        console.log("ID USER "+ value)
+      const value = await AsyncStorage.getItem("iduser");
+      if (value !== null) {
+        console.log("ID USER " + value);
       }
-    } catch(e) {
+    } catch (e) {
       // error reading value
     }
-  }
+  };
 
   const huythem = () => {
     setImage(
@@ -415,7 +414,7 @@ const HomeScreen = ({ navigation }) => {
             marginLeft: 13,
           }}
         >
-          <TouchableOpacity onPress={() =>   navigation.navigate("Yêu thích")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Yêu thích")}>
             <Text
               style={{
                 height: 40,
@@ -503,7 +502,11 @@ const HomeScreen = ({ navigation }) => {
                       fontWeight: "500",
                     }}
                   >
-                    {item.giaPhong.toLocaleString('en-US', {style : 'currency', currency : 'VND'})} - S: {item.chieuDai * item.chieuRong}m²
+                    {item.giaPhong.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "VND",
+                    })}{" "}
+                    - S: {item.chieuDai * item.chieuRong}m²
                   </Text>
                   <Text
                     style={{

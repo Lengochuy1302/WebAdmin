@@ -541,6 +541,9 @@ export default function Tables(props) {
         filter: false,
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
+        customBodyRender: (name) => {
+          return <text>{name.substring(0, 100)}...</text>;
+        },
       },
     },
   ];
@@ -852,6 +855,9 @@ export default function Tables(props) {
         filter: false,
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
+        customBodyRender: (name) => {
+          return <text>{name.substring(0, 100)}...</text>;
+        },
       },
     },
   ];
