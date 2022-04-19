@@ -31,6 +31,8 @@ app.get("/ds", (req, res) => {
   });
 });
 
+
+
 app.get("/dsuser", (req, res) => {
   con.query("SELECT * FROM `user` WHERE thanhVien != 'admin'", function (err, result, fields) {
     if (err) throw err;
@@ -81,6 +83,14 @@ app.get("/dssp/:id", (req, res) => {
   var sql =
     "SELECT * FROM room ORDER BY idroom desc LIMIT " + ofsset + " , " + limit;
   con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+app.get("/dshost/:idhost", (req, res) => {
+  con.query("SELECT * FROM room WHERE idUser = "+ req.params.idhost, function (err, result, fields) {
     if (err) throw err;
     res.send(result);
   });
@@ -469,22 +479,30 @@ app.post("/login", (req, res) => {
     if (result.length > 0) {
       var string = JSON.stringify(result);
       var json = JSON.parse(string);
-      console.log("Thành viên: " + json[0].thanhVien);
-      if (json[0].thanhVien === "admin" || json[0].thanhVien === "host") {
-        console.log(">> ID: ", json[0].idUser);
-        console.log(">> Email: ", json[0].email);
-        res.send({
-          success: true,
-          IDUSER: json[0].idUser,
-          EMAIL: json[0].email,
-        });
+      console.log("Thành viên: " + json[0].trangThai);
+      if (json[0].trangThai === "Hoạt động") {
+        if (json[0].thanhVien === "admin" || json[0].thanhVien === "host") {
+          console.log(">> ID: ", json[0].idUser);
+          console.log(">> Email: ", json[0].email);
+          console.log(">> ThanhVien: ", json[0].thanhVien);
+          res.send({
+            success: true,
+            IDUSER: json[0].idUser,
+            EMAIL: json[0].email,
+            THANHVIEN: json[0].thanhVien,
+          });
+        } else {
+          res.send({
+            success: false,
+            message: "Vui lòng đăng nhập tài khoản này ở app",
+          });
+          console.log(res);
+        }
       } else {
-        res.send({
-          success: false,
-          message: "Vui lòng đăng nhập tài khoản này ở app",
-        });
+        res.send({ success: false, message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ." });
         console.log(res);
       }
+ 
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);
@@ -512,16 +530,22 @@ app.post("/loginclient", (req, res) => {
       var json = JSON.parse(string);
       console.log("Thành viên: " + json[0].thanhVien);
       var idusers = JSON.stringify(json[0].idUser);
-      if (json[0].thanhVien === "member") {
-        res.send({ success: true, iduser: idusers });
-        console.log(res);
+      if (json[0].trangThai === "Hoạt động") {
+        if (json[0].thanhVien === "member") {
+          res.send({ success: true, iduser: idusers });
+          console.log(res);
+        } else {
+          res.send({
+            success: false,
+            message: "Vui lòng đăng nhập tài khoản này ở web admin",
+          });
+          console.log(res);
+        }
       } else {
-        res.send({
-          success: false,
-          message: "Vui lòng đăng nhập tài khoản này ở web admin",
-        });
+        res.send({ success: false, message: "Tài khoản đã bị khóa! Vui lòng liên hệ bộ phận hỗ trợ." });
         console.log(res);
       }
+ 
     } else {
       res.send({ success: false, message: "Sai tài khoản!" });
       console.log(res);

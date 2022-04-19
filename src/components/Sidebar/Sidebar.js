@@ -30,7 +30,7 @@ import {
 } from "../../context/LayoutContext";
 
 const structure = [
-  { id: 0, label: "Yêu thích", link: "/app/dashboard", icon: <HomeIcon /> },
+  { id: 0, label: "Thống kê", link: "/app/dashboard", icon: <HomeIcon /> },
   // {
   //   id: 1,
   //   label: "Quản lý",

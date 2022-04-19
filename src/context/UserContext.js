@@ -75,6 +75,7 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
       if (res.success === true) {
         localStorage.setItem("id_token", res.IDUSER);
         localStorage.setItem("email_token", res.EMAIL);
+        localStorage.setItem("thanhvien_token", res.THANHVIEN);
         dispatch({ type: "LOGIN_SUCCESS" });
         setError(null);
         setIsLoading(false);
