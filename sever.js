@@ -355,6 +355,19 @@ app.post("/remove", (req, res) => {
   });
 });
 
+app.post('/removeyeuthich', (req, res) => {
+  console.log(req.body.idrom);
+  console.log(req.body.iduser)
+  var sql = "DELETE FROM yeuthich WHERE idUser = '"+ req.body.iduser +"' AND idRoom = '"+ req.body.idrom +"';" ;
+   console.log(sql)
+
+  con.query(sql, function (err, result, fields) {
+
+    if (err) throw err;
+
+  });
+})
+
 // post sua san pham
 app.post("/updateProduc", (req, res) => {
   console.log(req.body.imageSua);
@@ -497,7 +510,7 @@ app.post("/updateProduc", (req, res) => {
 app.post("/yeuthich", (req, res) => {
   var sql = "SELECT * FROM yeuthich WHERE idRoom = '" + req.body.phongtro + "'";
 
-  console.log(sql);
+  console.log(req.body.phongtro.slice(1, -1));
 
   con.query(sql, function (err, result, fields) {
     if (err) {
@@ -513,8 +526,9 @@ app.post("/yeuthich", (req, res) => {
         "INSERT INTO yeuthich (idUser, idRoom) values('" +
         req.body.taikhoan +
         "','" +
-        req.body.phongtro +
+        req.body.phongtro.slice(1, -1) +
         "');";
+        console.log(sql);
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
       });
@@ -525,7 +539,7 @@ app.post("/yeuthich", (req, res) => {
 //hien thi ds yeu thich
 app.get("/dsyeuthich/:ids", (req, res) => {
   con.query(
-    "SELECT * FROM room WHERE idRoom=" + req.params.ids,
+    "SELECT * FROM room WHERE idRoom= '" + req.params.ids + "'",
     function (err, result, fields) {
       if (err) throw err;
       res.send(result);
@@ -535,7 +549,7 @@ app.get("/dsyeuthich/:ids", (req, res) => {
 
 //get data room yeu thich
 app.get("/getdatayeuthich/:iduser", (req, res) => {
-  var sql = "SELECT * FROM yeuthich WHERE idUser=" + req.params.iduser;
+  var sql = "SELECT * FROM yeuthich WHERE idUser= '" + req.params.iduser + "'";
   console.log(sql);
   var count = 0;
   var list = [];
@@ -543,7 +557,7 @@ app.get("/getdatayeuthich/:iduser", (req, res) => {
     result.map((item, index) => {
       const idPhong = item.idRoom;
       console.log(idPhong);
-      var sql = "SELECT * FROM room WHERE idRoom = " + idPhong;
+      var sql = "SELECT * FROM room WHERE idRoom = '" + idPhong + "'";
       console.log(sql);
       con.query(sql, function (err, data, fields) {
         data.map((item, index) => {

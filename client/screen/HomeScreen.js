@@ -15,7 +15,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-
+import Swipeout from 'react-native-swipeout';
 import { FlatGrid } from 'react-native-super-grid';
 const Width = Dimensions.get("screen").width - 230;
 const Height = Dimensions.get("screen").height;
@@ -25,6 +25,7 @@ const Height1 = Dimensions.get("screen").height;
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [getidtk, setidtk] = useState("");
   const getData = async (idtk) => {
 
     try {
@@ -46,15 +47,32 @@ const HomeScreen = ({ navigation }) => {
     })
  }
 
+ const removeSanPham = (id) => {
+  console.log("Remove san pham");
+  fetch("http://192.168.1.137:8000/removeyeuthich", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      idrom: id,
+      iduser: getidtk,
+    }),
+  })
+  onRefresh();
+};
   const onRefresh = () => {
     setLoading(true);
     AsyncStorage.getItem("iduser").then((value) => {
+      setidtk(value);
       getData(value);
     });
   };
 
   useEffect(() => {
     AsyncStorage.getItem("iduser").then((value) => {
+      setidtk(value);
       getData(value);
     });
 
@@ -65,12 +83,56 @@ const HomeScreen = ({ navigation }) => {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        <FlatGrid
+        <FlatList
           data={data}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
             
-              <TouchableOpacity
+            <Swipeout
+            style={{
+              
+              marginBottom: 10,
+              borderRadius: 10,
+              backgroundColor: "white",
+              borderRadius: 20,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 5,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+            }}
+            right={[
+              {
+                onPress: () => {
+                  Alert.alert(
+                    "Cảnh báo",
+                    "Bạn muốn xóa nó?",
+                    [
+                      {
+                        text: "No",
+                        onPress: () => console.log("Cancel"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "Yes",
+                        onPress: () => {
+                          removeSanPham(item.idroom)
+                        },
+                      },
+                    ],
+                    { cancelable: true }
+                  );
+                },
+                backgroundColor: "#FF6666",
+                text: "Xóa",
+              },
+              
+            ]}
+            >
+           <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Chi tiết phòng", {
                   idRoom: item.idroom,
@@ -166,8 +228,7 @@ const HomeScreen = ({ navigation }) => {
 
                 </View>
               </TouchableOpacity>
-
-            ////////////
+          </Swipeout>
           )}
           onRefresh={onRefresh}
           progressViewOffset={100}
