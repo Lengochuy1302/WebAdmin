@@ -29,76 +29,80 @@ const Width1 = Dimensions.get("screen").width;
 const Height1 = Dimensions.get("screen").height;
 
 const DetailScreen = ({ route }) => {
-  const {
-    idRoom,
-    image,
-    tenPhong,
-    giaPhong,
-    loaiPhong,
-    chieuDai,
-    chieuRong,
-    giaNuoc,
-    giaDien,
-    mota,
-    tinh,
-    quan,
-    phuong,
-    duong,
-    user,
-    gioiTinh,
-    ngayTao,
-    luotXem,
-  } = route.params;
-  DATA2 = [];
   const [idtaikhoan, setidtaikhoan] = useState("");
   const [idphongtro, setidphongtro] = useState("");
-  var IdRoom = JSON.stringify(idRoom);
-  AsyncStorage.getItem("iduser").then((value) => {
-    setidtaikhoan(value);
-    setidphongtro(IdRoom);
-  });
-  var itemnew = {
-    idRoom: idRoom,
-    image: image,
-    tenPhong: tenPhong,
-    giaPhong: giaPhong,
-    loaiPhong: loaiPhong,
-    chieuDai: chieuDai,
-    chieuRong: chieuRong,
-    giaNuoc: giaNuoc,
-    giaDien: giaDien,
-    mota: mota,
-    tinh: tinh,
-    quan: quan,
-    phuong: phuong,
-    duong: duong,
-    user: user,
-    gioiTinh: gioiTinh,
-    ngayTao: ngayTao,
-    luotXem: luotXem,
-  };
-  DATA2.push(itemnew);
+  // var IdRoom = JSON.stringify(idRoom);
 
-  useEffect(() => {
-    const {
-      idRoom,
-      luotXem,
-    } = route.params;
-    console.log("Phong id " + idRoom);
-        fetch("http://192.168.1.137:8000/updateView", {
+  // var itemnew = {
+  //   idRoom: idRoom,
+  //   image: image,
+  //   tenPhong: tenPhong,
+  //   giaPhong: giaPhong,
+  //   loaiPhong: loaiPhong,
+  //   chieuDai: chieuDai,
+  //   chieuRong: chieuRong,
+  //   giaNuoc: giaNuoc,
+  //   giaDien: giaDien,
+  //   mota: mota,
+  //   tinh: tinh,
+  //   quan: quan,
+  //   phuong: phuong,
+  //   duong: duong,
+  //   user: user,
+  //   gioiTinh: gioiTinh,
+  //   ngayTao: ngayTao,
+  //   luotXem: luotXem,
+  // };
+  // DATA2.push(itemnew);
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const getData = async (id) => {
+    try {
+      const response = await fetch(
+        "http://192.168.1.137:8000/dssv/"+ id,
+      );
+      const json = await response.json();
+      console.log("data:",json[0].idroom);
+      console.log("data:",json[0].luotXem);
+      setData(json);
+      setDataView(json[0].idroom, json[0].luotXem);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const setDataView = async (idrom, viewcount) => {
+    fetch("http://192.168.1.137:8000/updateView", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idRoomView: idRoom,
-        viewCount: luotXem + 1,
+        idRoomView: idrom,
+        viewCount: viewcount + 1,
       }),
-    }) 
+    }).then((response) => {
+      console.log(JSON.stringify(response, null, 4));
+      return response.json();
+    });
+  };
+  useEffect(() => {
+    AsyncStorage.getItem("iduser").then((value) => {
+      console.log("id tai khoan: ",value);
+      setidtaikhoan(value);
+    });
+
+    AsyncStorage.getItem("keyidroom").then((value) => {
+      console.log("id phong: ",value);
+      setidphongtro(value);
+      getData(value);
+    });
   }, []);
 
   const addYeuThich = () => {
+    console.log("id phong: ",idphongtro);
     fetch("http://192.168.1.137:8000/yeuthich", {
       method: "POST",
       headers: {
@@ -120,7 +124,7 @@ const DetailScreen = ({ route }) => {
       <View style={styles.container}>
         <View style={{ fontSize: 17, padding: 0, height: "100%" }}>
           <FlatList
-            data={DATA2}
+            data={data}
             keyExtractor={(item) => item.idRoom}
             renderItem={({ item }) => {
               return (
@@ -433,7 +437,7 @@ const DetailScreen = ({ route }) => {
                         fontWeight: "600",
                       }}
                   >
-                 {item.mota}
+                 {item.moTa}
                   </Text>
                   </View>
                   </ScrollView>

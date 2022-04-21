@@ -438,26 +438,7 @@ const HomeScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("Chi tiết phòng", {
-                    idRoom: item.idroom,
-                    image: item.image,
-                    tenPhong: item.tenPhong,
-                    giaPhong: item.giaPhong,
-                    loaiPhong: item.idLoaiPhong,
-                    chieuDai: item.chieuDai,
-                    chieuRong: item.chieuRong,
-                    giaNuoc: item.giaNuoc,
-                    giaDien: item.giaDien,
-                    mota: item.moTa,
-                    tinh: item.tinh,
-                    quan: item.quan,
-                    phuong: item.phuong,
-                    duong: item.duong,
-                    user: item.idUser,
-                    gioiTinh: item.gioiTinh,
-                    ngayTao: item.ngayTao,
-                    luotXem: item.luotXem,
-                  })
+                  navigation.navigate("Chi tiết phòng",  AsyncStorage.setItem('keyidroom',item.idroom))
                 }
               >
                 <View style={{ fontSize: 17, marginBottom: 10 }}>

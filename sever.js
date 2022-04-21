@@ -57,6 +57,16 @@ app.get("/ds", (req, res) => {
   );
 });
 
+app.get("/dssv/:idss", (req, res) => {
+  con.query(
+    "SELECT * FROM room WHERE idroom='" + req.params.idss + "';",
+    function (err, result, fields) {
+      if (err) throw err;
+      res.send(result);
+    },
+  );
+});
+
 app.get("/dsview", (req, res) => {
   con.query(
     "SELECT * FROM room ORDER BY idroom desc",
@@ -355,18 +365,21 @@ app.post("/remove", (req, res) => {
   });
 });
 
-app.post('/removeyeuthich', (req, res) => {
+app.post("/removeyeuthich", (req, res) => {
   console.log(req.body.idrom);
-  console.log(req.body.iduser)
-  var sql = "DELETE FROM yeuthich WHERE idUser = '"+ req.body.iduser +"' AND idRoom = '"+ req.body.idrom +"';" ;
-   console.log(sql)
+  console.log(req.body.iduser);
+  var sql =
+    "DELETE FROM yeuthich WHERE idUser = '" +
+    req.body.iduser +
+    "' AND idRoom = '" +
+    req.body.idrom +
+    "';";
+  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
-
     if (err) throw err;
-
   });
-})
+});
 
 // post sua san pham
 app.post("/updateProduc", (req, res) => {
@@ -526,9 +539,9 @@ app.post("/yeuthich", (req, res) => {
         "INSERT INTO yeuthich (idUser, idRoom) values('" +
         req.body.taikhoan +
         "','" +
-        req.body.phongtro.slice(1, -1) +
+        req.body.phongtro +
         "');";
-        console.log(sql);
+      console.log(sql);
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
       });
@@ -556,10 +569,11 @@ app.get("/getdatayeuthich/:iduser", (req, res) => {
   con.query(sql, function (err, result, fields) {
     result.map((item, index) => {
       const idPhong = item.idRoom;
-      console.log(idPhong);
-      var sql = "SELECT * FROM room WHERE idRoom = '" + idPhong + "'";
+      console.log("lặp :",idPhong);
+      var sql = "SELECT * FROM room WHERE idroom = '" + idPhong + "'";
       console.log(sql);
       con.query(sql, function (err, data, fields) {
+        console.log("list :",      data.length );
         data.map((item, index) => {
           console.log(item.tenPhong);
           var itemnew = {

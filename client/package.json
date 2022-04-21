@@ -59,7 +59,8 @@
     "react-native-swipeview": "*",
     "react-native-tab-view": "^3.0.0",
     "react-native-web": "0.17.1",
-    "sassy-datepicker": "^0.8.0"
+    "sassy-datepicker": "^0.8.0",
+    "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

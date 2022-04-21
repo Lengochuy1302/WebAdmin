@@ -12,6 +12,7 @@ import { ContactStackNavigator } from "./StackNavigator";
 import { MaterialIcons } from "@expo/vector-icons";
 import Contact from "../screen/Contact";
 import { Alert } from "react-native";
+import SettingScreen from "../screen/Setting";
 const Drawer = createDrawerNavigator();
 
 const screenOptionStyle = {
@@ -58,9 +59,12 @@ const DrawerNavigatorquanly = () => {
       options={{
         headerShown: false,
       }}
-      name="Quản lý" component={Contact} />
+      name="Trang chủ" component={Contact} />
             <Drawer.Screen
       name="Yêu thích" component={HomeScreen} />
+
+<Drawer.Screen
+      name="Chat" component={SettingScreen} />
     </Drawer.Navigator>
   );
 };

@@ -27,12 +27,13 @@ const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [getidtk, setidtk] = useState("");
   const getData = async (idtk) => {
-
+      console.log("kkks");
     try {
       const response = await fetch(
         "http://192.168.1.137:8000/getdatayeuthich/" +idtk,
       );
       const json = await response.json();
+      console.log(json);
       setData(json);
     } catch (error) {
       console.error(error);
