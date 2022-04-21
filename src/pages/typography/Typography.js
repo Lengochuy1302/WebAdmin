@@ -2,10 +2,11 @@ import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 // styles
-import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import useStyle from "./styles";
+import "./image.css";
 import axios from "axios";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TypographyPage() {
   var classes = useStyle();
-  const iduser = localStorage.getItem('id_token');
+  const iduser = localStorage.getItem("id_token");
   const classe = useStyles();
   const [tenPhong, setTenPhong] = React.useState("");
   const [giaPhong, setGiaPhong] = React.useState("");
@@ -72,6 +73,35 @@ export default function TypographyPage() {
     file: [],
     filepreview: null,
   });
+
+  const [selectedFiles, setSelectedFiles] = React.useState([]);
+
+  const handleImageChange = (e) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file),
+      );
+      setSelectedFiles((prevImages) => prevImages.concat(filesArray));
+      Array.from(e.target.files).map((item, index) => {
+        console.log(e.target.files[index]);
+        const data = new FormData();
+        data.append("file", e.target.files[index]);
+        axios
+          .post("http://localhost:8000/uploadfile", data)
+          .then((response) => {
+            console.log(response);
+          });
+      });
+    }
+  };
+
+  const renderPhotos = (source) => {
+    console.log("source: ", source);
+    return source.map((photo) => {
+      return <img className="Anh" src={photo} alt="" key={photo} />;
+    });
+  };
+
   const getSteps = () => {
     return [
       "Thêm thông tin địa chỉ",
@@ -210,13 +240,12 @@ export default function TypographyPage() {
         return (
           <>
             <form onSubmit={handleSubmit(onSubmit)}>
-            <div style={{ marginBottom: 20  }} className={classes.input}>
+              <div style={{ marginBottom: 20 }} className={classes.input}>
                 <FormControl component="fieldset">
                   <Typography className={classes.logotypeText}>
                     Giới tính
                   </Typography>
                   <RadioGroup
-                
                     className={classes.formTienIch}
                     aria-label="gender"
                     name="gender1"
@@ -248,121 +277,119 @@ export default function TypographyPage() {
                   </RadioGroup>
                 </FormControl>
               </div>
-            <div style={{ marginBottom: 20 , display: "none"}} className={classes.input}>
-              <FormControl
-                required
-                component="fieldset"
-                className={classes.formControl}
+              <div
+                style={{ marginBottom: 20, display: "none" }}
+                className={classes.input}
               >
-                    <Typography >
-                    Tiện ích
-                  </Typography>
-                <FormGroup           
-                className={classes.formTienIch}
+                <FormControl
+                  required
+                  component="fieldset"
+                  className={classes.formControl}
                 >
-                  <FormControlLabel
-                  className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={tivi}
-                        onChange={handleChangetienich}
-                        name="tivi"
-                      />
-                    }
-                    label="Tivi"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={wcrieng}
-                        onChange={handleChangetienich}
-                        name="wcrieng"
-                      />
-                    }
-                    label="WC Riêng"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={maygiat}
-                        onChange={handleChangetienich}
-                        name="maygiat"
-                      />
-                    }
-                    label="Máy Giặt"
-                  />
-                   <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={gaclung}
-                        onChange={handleChangetienich}
-                        name="gaclung"
-                      />
-                    }
-                    label="Gác Lửng"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={maylanh}
-                        onChange={handleChangetienich}
-                        name="maylanh"
-                      />
-                    }
-                    label="Máy Lạnh"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={tulanh}
-                        onChange={handleChangetienich}
-                        name="tulanh"
-                      />
-                    }
-                    label="Tủ Lạnh"
-                  />
-                   <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={anninh}
-                        onChange={handleChangetienich}
-                        name="anninh"
-                      />
-                    }
-                    label="An Ninh"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={thucung}
-                        onChange={handleChangetienich}
-                        name="thucung"
-                      />
-                    }
-                    label="Thú Cưng"
-                  />
-                  <FormControlLabel
-                            className={classes.labelForm}
-                    control={
-                      <Checkbox
-                        checked={tudo}
-                        onChange={handleChangetienich}
-                        name="tudo"
-                      />
-                    }
-                    label="Tủ Đồ"
-                  />
-                </FormGroup>
-              </FormControl>
-            </div>
-
+                  <Typography>Tiện ích</Typography>
+                  <FormGroup className={classes.formTienIch}>
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={tivi}
+                          onChange={handleChangetienich}
+                          name="tivi"
+                        />
+                      }
+                      label="Tivi"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={wcrieng}
+                          onChange={handleChangetienich}
+                          name="wcrieng"
+                        />
+                      }
+                      label="WC Riêng"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={maygiat}
+                          onChange={handleChangetienich}
+                          name="maygiat"
+                        />
+                      }
+                      label="Máy Giặt"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={gaclung}
+                          onChange={handleChangetienich}
+                          name="gaclung"
+                        />
+                      }
+                      label="Gác Lửng"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={maylanh}
+                          onChange={handleChangetienich}
+                          name="maylanh"
+                        />
+                      }
+                      label="Máy Lạnh"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={tulanh}
+                          onChange={handleChangetienich}
+                          name="tulanh"
+                        />
+                      }
+                      label="Tủ Lạnh"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={anninh}
+                          onChange={handleChangetienich}
+                          name="anninh"
+                        />
+                      }
+                      label="An Ninh"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={thucung}
+                          onChange={handleChangetienich}
+                          name="thucung"
+                        />
+                      }
+                      label="Thú Cưng"
+                    />
+                    <FormControlLabel
+                      className={classes.labelForm}
+                      control={
+                        <Checkbox
+                          checked={tudo}
+                          onChange={handleChangetienich}
+                          name="tudo"
+                        />
+                      }
+                      label="Tủ Đồ"
+                    />
+                  </FormGroup>
+                </FormControl>
+              </div>
             </form>
           </>
         );
@@ -370,7 +397,10 @@ export default function TypographyPage() {
         return (
           <>
             <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={classes.input} style={{display: 'none' , marginBottom: 20 }}>
+              <div
+                className={classes.input}
+                style={{ display: "none", marginBottom: 20 }}
+              >
                 <TextField
                   className={classes.inputText}
                   id="outlined-basic"
@@ -378,9 +408,7 @@ export default function TypographyPage() {
                   variant="outlined"
                   {...register("IdUser")}
                   defaultValue={iduser}
-            
                 />
-           
               </div>
               <div className={classes.input}>
                 <TextField
@@ -392,7 +420,7 @@ export default function TypographyPage() {
                   variant="outlined"
                 />
               </div>
-             
+
               <div style={{ marginBottom: 20 }} className={classes.input}>
                 <TextField
                   className={classes.inputText3}
@@ -435,10 +463,10 @@ export default function TypographyPage() {
       ...statetienich,
       [event.target.name]: event.target.checked,
     });
-
   };
   console.log(statetienich);
-  const { tivi,
+  const {
+    tivi,
     wcrieng,
     maygiat,
     gaclung,
@@ -446,7 +474,8 @@ export default function TypographyPage() {
     tulanh,
     anninh,
     thucung,
-    tudo } = statetienich;
+    tudo,
+  } = statetienich;
   // const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
 
   const {
@@ -455,47 +484,47 @@ export default function TypographyPage() {
     formState: { errors },
   } = useForm();
   const onSubmit = (values) => {
-    if (values.tinh === "" ) {
+    if (values.tinh === "") {
       alert("Tỉnh không được bỏ trống!");
       return;
     }
-    if (values.phuong === "" ) {
+    if (values.phuong === "") {
       alert("Phường không được bỏ trống!");
       return;
     }
-    if (values.quan === "" ) {
+    if (values.quan === "") {
       alert("Quận không được bỏ trống!");
       return;
     }
-    if (values.duong === "" ) {
+    if (values.duong === "") {
       alert("Đường/số nhà không được bỏ trống!");
       return;
     }
-    if (values.giaPhong === "" ) {
+    if (values.giaPhong === "") {
       alert("Giá phòng không được bỏ trống!");
       return;
     }
-    if (values.giaDien === "" ) {
+    if (values.giaDien === "") {
       alert("Giá điện không được bỏ trống!");
       return;
     }
-    if (values.giaNuoc === "" ) {
+    if (values.giaNuoc === "") {
       alert("Giá nước không được bỏ trống!");
       return;
     }
-    if (values.chieuDai === "" ) {
+    if (values.chieuDai === "") {
       alert("Chiều dài không được bỏ trống!");
       return;
     }
-    if (values.chieuRong === "" ) {
+    if (values.chieuRong === "") {
       alert("Chiều rộng không được bỏ trống!");
       return;
     }
-    if (values.tenPhong === "" ) {
+    if (values.tenPhong === "") {
       alert("Tên phòng không được bỏ trống!");
       return;
     }
-    if (values.moTa === "" ) {
+    if (values.moTa === "") {
       alert("Mô tả không được bỏ trống!");
       return;
     }
@@ -504,20 +533,6 @@ export default function TypographyPage() {
       .then((response) => {});
     alert("Thêm thành công");
     refreshPage();
-  };
-
-  const uploadImage = (event) => {
-    const data = new FormData();
-    data.append("file", event.target.files[0]);
-    console.log(data);
-    axios.post("http://localhost:8000/uploadfile", data).then((response) => {
-      console.log(response);
-    });
-    setuserInfo({
-      ...userInfo,
-      file: event.target.files[0],
-      filepreview: URL.createObjectURL(event.target.files[0]),
-    });
   };
 
   const refreshPage = () => {
@@ -572,22 +587,23 @@ export default function TypographyPage() {
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <div style={{ marginBottom: 20 }} className={classes.image}>
-            <form
-              action="http://localhost:8000/uploadfile"
-              enctype="multipart/form-data"
-              method="POST"
-            >
-              {userInfo.filepreview !== null ? (
-                <img
-                  style={{ width: '50%', borderRadius: 10 }}
-                  className="previewimg"
-                  src={userInfo.filepreview}
-                  alt="UploadImage"
+            <div className="app">
+              <div className="heading">Thêm hình ảnh</div>
+              <form>
+                <input
+                  type="file"
+                  id="file"
+                  multiple
+                  onChange={handleImageChange}
                 />
-              ) : null}
-              <div></div>
-              <input type="file" accept="image/*" onChange={uploadImage} />
-            </form>
+                <div className="label-holder">
+                  <label htmlFor="file" className="label">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                  </label>
+                </div>
+                <div className="result">{renderPhotos(selectedFiles)}</div>
+              </form>
+            </div>
           </div>
           <form
             action="http://localhost:8000/uploadfile"
@@ -606,7 +622,7 @@ export default function TypographyPage() {
               variant="contained"
               color="secondary"
             >
-              Thêm phòng trọ
+              Thêm phòng
             </Button>
           </form>
         </Paper>

@@ -17,6 +17,22 @@ var con = mysql.createConnection({
   database: "asmsever",
 });
 
+function generateID() { // Public Domain/MIT
+  var d = new Date().getTime();//Timestamp
+  var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16;//random number between 0 and 16
+    if (d > 0) {//Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {//Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
 app.use("/upload", express.static("upload"));
 
 con.connect(function (err) {
@@ -26,7 +42,7 @@ con.connect(function (err) {
 
 app.get("/ds", (req, res) => {
   con.query(
-    "SELECT * FROM room ORDER BY idroom desc",
+    "SELECT * FROM room ORDER BY stt desc",
     function (err, result, fields) {
       if (err) throw err;
       res.send(result);
@@ -163,7 +179,8 @@ app.get("/dshostview/:idhost", (req, res) => {
 const multer = require("multer");
 // SET STORAGE
 let urlImage = null;
-let urlImageSua;
+var listimage =[];
+let uidRoom = "";
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (
@@ -178,7 +195,14 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     urlImage = Date.now() + ".jpg";
+    var arrhinhanh = {
+      tenHinh: urlImage
+    }
+    listimage.push(arrhinhanh);
+    console.log(listimage);
     cb(null, urlImage);
+
+
   },
 });
 var upload = multer({ storage: storage });
@@ -194,6 +218,7 @@ app.post("/uploadfile", upload.single("file"), (req, res, next) => {
 //end upload
 // post
 app.post("/addProduc", upload.single("file"), (req, res, next) => {
+  uidRoom =generateID();
   var curDate = new Date();
   // Lấy ngày hiện tại
   var curDay = curDate.getDate();
@@ -203,7 +228,9 @@ app.post("/addProduc", upload.single("file"), (req, res, next) => {
   var curYear = curDate.getFullYear();
 
   var sql =
-    "insert into room (image, tenPhong, giaPhong, idLoaiPhong, chieuDai, chieuRong, giaNuoc, giaDien, moTa,tinh, quan, phuong, duong, idUser, idTienIch, xacThuc, kiemDuyet, gioiTinh, ngayTao, luotXem ) values('" +
+    "insert into room (idroom, image, tenPhong, giaPhong, idLoaiPhong, chieuDai, chieuRong, giaNuoc, giaDien, moTa,tinh, quan, phuong, duong, idUser, idTienIch, xacThuc, kiemDuyet, gioiTinh, ngayTao, luotXem ) values('" +
+    uidRoom +
+    "','" +
     urlImage +
     "','" +
     req.body.tenPhong +
@@ -246,148 +273,221 @@ app.post("/addProduc", upload.single("file"), (req, res, next) => {
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    if (result == "ok") {
-      urlImage = null;
-      console.log(result);
-      res.send("ok");
+    var count = 0;
+    for (var i=0; i < listimage.length; i++ ) {
+  
+      var sql ="insert into image (tenImage, idRoom) values('" +
+      listimage[i].tenHinh +
+      "','" +
+      uidRoom +
+      "');"
+      con.query(sql, function (err, result, fields) {
+        if (err) throw err;
+        count = count + 1;
+        if (count == listimage.length) {
+          urlImage = null;
+          listimage=[];
+          res.send("ok");
+        }
+      });
     }
   });
 });
 
-app.post("/remove", (req, res) => {
-  console.log(req.body.idroomdele);
-  console.log(req.body.urlimage);
-  var sql = "DELETE FROM room WHERE idroom = " + req.body.idroomdele;
+//get image
+app.get("/getlisstimg/:idroom", (req, res) => {
+  var sql = "SELECT * FROM image WHERE idRoom= '" + req.params.idroom +"'";
   console.log(sql);
-
+  var count = 0;
+  var list = [];
   con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    var fs = require("fs");
-    var filePath = "upload/" + req.body.urlimage;
-    fs.unlink(filePath, deleteFileCallback);
-    function deleteFileCallback(error) {
-      if (error) {
-        console.log("Error in dleting file");
-        console.log(error.message);
-      } else {
-        console.log("Deleted Successfully...");
+    result.map((item, index) => {
+      const idPhong = item.tenImage;
+      console.log(idPhong);
+      var itemnew = {
+              tenhinh: item.tenImage,
       }
-    }
+      list.push(itemnew);
+      count = count + 1;
+      if (result.length == count) {
+        console.log("Dataa đủ: ", list);
+
+        res.send(list);
+      }
+    });
+  });
+});
+
+app.post("/remove", (req, res) => {
+  console.log("Thay đổi img");
+  var sql = "SELECT * FROM image WHERE idRoom= '" +  req.body.idroomdele +"'";
+  console.log(sql);
+  con.query(sql, function (err, result, fields) {
+    result.map((item, index) => {
+      const idPhong = item.tenImage;
+      console.log(idPhong);
+      var fs = require("fs");
+      var filePath = "upload/" + idPhong;
+      fs.unlink(filePath, deleteFileCallback);
+      function deleteFileCallback(error) {
+        if (error) {
+          console.log("Error in dleting file");
+          console.log(error.message);
+        } else {
+          console.log("Deleted Successfully...");
+          var sql = "DELETE FROM image WHERE tenImage = '" +  idPhong + "'";
+          console.log(sql);
+          con.query(sql, function (err, data, fields) {
+            var sql = "DELETE FROM room WHERE idroom = '" + req.body.idroomdele + "'";
+            console.log(sql);
+          
+            con.query(sql, function (err, result, fields) {
+              
+            });
+          });
+        }
+      }
+    });
   });
 });
 
 // post sua san pham
 app.post("/updateProduc", (req, res) => {
   console.log(req.body.imageSua);
-  if (urlImage == null) {
-    urlImage = req.body.imageSua;
-  }
-  var sql = "SELECT * FROM room WHERE image = '" + urlImage + "'";
-
+if (listimage.length == 0) {
+  console.log("Không thay đổi img");
+  console.log(req.body.loaiPhongSua);
+  console.log(req.body.tienIchSua);
+  var sql =
+    "UPDATE room SET tenPhong= '" +
+    req.body.tenPhongSua +
+    "', giaPhong= '" +
+    req.body.giaPhongSua +
+    "', idLoaiPhong= '" +
+    req.body.loaiPhongSua +
+    "', chieuDai= '" +
+    req.body.chieuDaiSua +
+    "', chieuRong= '" +
+    req.body.chieuRongSua +
+    "', giaNuoc= '" +
+    req.body.giaNuocSua +
+    "', giaDien= '" +
+    req.body.giaDienSua +
+    "', moTa= '" +
+    req.body.moTaSua +
+    "', tinh= '" +
+    req.body.tinhSua +
+    "', quan= '" +
+    req.body.quanSua +
+    "', phuong= '" +
+    req.body.phuongSua +
+    "', duong= '" +
+    req.body.duongSua +
+    "',idTienIch= '" +
+    req.body.tienIchSua +
+    "',  gioiTinh= '" +
+    req.body.gioiTinhSua +
+    "' WHERE idroom= '" +
+    req.body.idRoomSua +
+    "'";
+  console.log(sql);
   con.query(sql, function (err, result, fields) {
-    if (err) {
-      console.log(err);
-      res.send({ success: false, message: "Database không có kết nối!" });
-    }
-
-    if (result.length > 0) {
-      console.log(req.body.loaiPhongSua);
-      console.log(req.body.tienIchSua);
-      var sql =
-        "UPDATE room SET tenPhong= '" +
-        req.body.tenPhongSua +
-        "', giaPhong= '" +
-        req.body.giaPhongSua +
-        "', idLoaiPhong= '" +
-        req.body.loaiPhongSua +
-        "', chieuDai= '" +
-        req.body.chieuDaiSua +
-        "', chieuRong= '" +
-        req.body.chieuRongSua +
-        "', giaNuoc= '" +
-        req.body.giaNuocSua +
-        "', giaDien= '" +
-        req.body.giaDienSua +
-        "', moTa= '" +
-        req.body.moTaSua +
-        "', tinh= '" +
-        req.body.tinhSua +
-        "', quan= '" +
-        req.body.quanSua +
-        "', phuong= '" +
-        req.body.phuongSua +
-        "', duong= '" +
-        req.body.duongSua +
-        "',idTienIch= '" +
-        req.body.tienIchSua +
-        "',  gioiTinh= '" +
-        req.body.gioiTinhSua +
-        "' WHERE idroom= '" +
-        req.body.idRoomSua +
-        "'";
-      console.log(sql);
-      con.query(sql, function (err, result, fields) {
-        if (err) throw err;
-        if (result == "ok") {
-          res.send("ok");
-        }
-      });
-      urlImage = null;
-    } else {
-      console.log(req.body.loaiPhongSua);
-      console.log(req.body.tienIchSua);
-      var sql =
-        "UPDATE room SET image= '" +
-        urlImage +
-        "', tenPhong= '" +
-        req.body.tenPhongSua +
-        "', giaPhong= '" +
-        req.body.giaPhongSua +
-        "', idLoaiPhong= '" +
-        req.body.loaiPhongSua +
-        "', chieuDai= '" +
-        req.body.chieuDaiSua +
-        "', chieuRong= '" +
-        req.body.chieuRongSua +
-        "', giaNuoc= '" +
-        req.body.giaNuocSua +
-        "', giaDien= '" +
-        req.body.giaDienSua +
-        "', moTa= '" +
-        req.body.moTaSua +
-        "', tinh= '" +
-        req.body.tinhSua +
-        "', quan= '" +
-        req.body.quanSua +
-        "', phuong= '" +
-        req.body.phuongSua +
-        "', duong= '" +
-        req.body.duongSua +
-        "',idTienIch= '" +
-        req.body.tienIchSua +
-        "',  gioiTinh= '" +
-        req.body.gioiTinhSua +
-        "' WHERE idroom= '" +
-        req.body.idRoomSua +
-        "'";
-      console.log(sql);
-      con.query(sql, function (err, result, fields) {
-        if (err) throw err;
-        var fs = require("fs");
-        var filePath = "upload/" + req.body.imageSua;
-        fs.unlink(filePath, deleteFileCallback);
-        function deleteFileCallback(error) {
-          if (error) {
-            console.log("Error in dleting file");
-            console.log(error.message);
-          } else {
-            console.log("Deleted Successfully...");
-          }
-        }
-      });
-      urlImage = null;
+    if (err) throw err;
+    if (result == "ok") {
+      res.send("ok");
     }
   });
+  urlImage = null;
+  listimage=[];
+
+} else {
+  console.log("Thay đổi img");
+  var sql = "SELECT * FROM image WHERE idRoom= '" +  req.body.idRoomSua +"'";
+  console.log(sql);
+  var dem = 0;
+  con.query(sql, function (err, result, fields) {
+    result.map((item, index) => {
+      const idPhong = item.tenImage;
+      console.log(idPhong);
+      var fs = require("fs");
+      var filePath = "upload/" + idPhong;
+      fs.unlink(filePath, deleteFileCallback);
+      function deleteFileCallback(error) {
+        if (error) {
+          console.log("Error in dleting file");
+          console.log(error.message);
+        } else {
+          console.log("Deleted Successfully...");
+          var sql = "DELETE FROM image WHERE idRoom = '" +  req.body.idRoomSua + "'";
+          console.log(sql);
+          con.query(sql, function (err, data, fields) {
+            dem = dem + 1;
+            if (dem == result.length) {
+              var sql =
+              "UPDATE room SET image= '" +
+              urlImage +
+              "', tenPhong= '" +
+              req.body.tenPhongSua +
+              "', giaPhong= '" +
+              req.body.giaPhongSua +
+              "', idLoaiPhong= '" +
+              req.body.loaiPhongSua +
+              "', chieuDai= '" +
+              req.body.chieuDaiSua +
+              "', chieuRong= '" +
+              req.body.chieuRongSua +
+              "', giaNuoc= '" +
+              req.body.giaNuocSua +
+              "', giaDien= '" +
+              req.body.giaDienSua +
+              "', moTa= '" +
+              req.body.moTaSua +
+              "', tinh= '" +
+              req.body.tinhSua +
+              "', quan= '" +
+              req.body.quanSua +
+              "', phuong= '" +
+              req.body.phuongSua +
+              "', duong= '" +
+              req.body.duongSua +
+              "',idTienIch= '" +
+              req.body.tienIchSua +
+              "',  gioiTinh= '" +
+              req.body.gioiTinhSua +
+              "' WHERE idroom = '" +
+              req.body.idRoomSua +
+              "'";
+            console.log(sql);
+            con.query(sql, function (err, result, fields) {
+              if (err) throw err;
+              var count = 0;
+              for (var i=0; i < listimage.length; i++ ) {
+            
+                var sql ="insert into image (tenImage, idRoom) values('" +
+                listimage[i].tenHinh +
+                "','" +
+                req.body.idRoomSua +
+                "');"
+                console.log("up img",sql);
+                con.query(sql, function (err, result, fields) {
+                  if (err) throw err;
+                  count = count + 1;
+                  if (count == listimage.length) {
+                    urlImage = null;
+                    listimage=[];
+                    res.send("ok");
+                  }
+                });
+              }
+            });
+            }
+          });
+        }
+      }
+    });
+  });
+
+}
 });
 
 //them yeu thich

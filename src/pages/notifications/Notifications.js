@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import useStyle from "./styles";
+import "./image.css";
 import axios from "axios";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -70,6 +71,37 @@ export default function TypographyPage(props) {
     file: [],
     filepreview: null,
   });
+
+  const [selectedFiles, setSelectedFiles] = React.useState([]);
+  const [dataPost, setDataPost] = React.useState([]);
+  var rong =[];
+  const handleImageChange = (e) => {
+    if (e.target.files) {
+      setDataPost(rong);
+      const filesArray = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file),
+      );
+      setSelectedFiles((prevImages) => prevImages.concat(filesArray));
+      Array.from(e.target.files).map((item, index) => {
+        console.log(e.target.files[index]);
+        const data = new FormData();
+        data.append("file", e.target.files[index]);
+        axios
+          .post("http://localhost:8000/uploadfile", data)
+          .then((response) => {
+            console.log(response);
+          });
+      });
+    }
+  };
+
+  const renderPhotos = (source) => {
+    console.log("source: ", source);
+    return source.map((photo) => {
+      return <img className="Anh" src={photo} alt="" key={photo} />;
+    });
+  };
+
   const getSteps = () => {
     return [
       "Thêm thông tin địa chỉ",
@@ -211,7 +243,7 @@ export default function TypographyPage(props) {
         return (
           <>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div style={{ marginBottom: 20  }} className={classes.input}>
+              <div style={{ marginBottom: 20 }} className={classes.input}>
                 <FormControl component="fieldset">
                   <Typography className={classes.logotypeText}>
                     Giới tính
@@ -248,7 +280,7 @@ export default function TypographyPage(props) {
                   </RadioGroup>
                 </FormControl>
               </div>
-              <div style={{ marginBottom: 20 , display: "none"}} className={classes.input}>
+              {/* <div style={{ marginBottom: 20 , display: "none"}} className={classes.input}>
               <FormControl
                 required
                 component="fieldset"
@@ -361,7 +393,7 @@ export default function TypographyPage(props) {
                   />
                 </FormGroup>
               </FormControl>
-            </div>
+            </div> */}
             </form>
           </>
         );
@@ -431,32 +463,14 @@ export default function TypographyPage(props) {
     setActiveStep(0);
   };
 
-
-  console.log(props.location.state.idTienIch);
- var tienich = props.location.state.idTienIch;
- console.log(tienich);
-  const [statetienich, setStatetienich] = React.useState(
-    tienich
-  );
-
+  const [statetienich, setStatetienich] = React.useState();
 
   const handleChangetienich = (event) => {
     setStatetienich({
       ...statetienich,
       [event.target.name]: event.target.checked,
     });
-
   };
-  console.log(statetienich);
-  const { tivi,
-    wcrieng,
-    maygiat,
-    gaclung,
-    maylanh,
-    tulanh,
-    anninh,
-    thucung,
-    tudo } = statetienich;
 
   const {
     handleSubmit,
@@ -466,47 +480,47 @@ export default function TypographyPage(props) {
 
   const onSubmit = (values) => {
     console.log(values);
-    if (values.tinhSua === "" ) {
+    if (values.tinhSua === "") {
       alert("Tỉnh không được bỏ trống!");
       return;
     }
-    if (values.phuongSua === "" ) {
+    if (values.phuongSua === "") {
       alert("Phường không được bỏ trống!");
       return;
     }
-    if (values.quanSua === "" ) {
+    if (values.quanSua === "") {
       alert("Quận không được bỏ trống!");
       return;
     }
-    if (values.duongSua === "" ) {
+    if (values.duongSua === "") {
       alert("Đường/số nhà không được bỏ trống!");
       return;
     }
-    if (values.giaPhongSua === "" ) {
+    if (values.giaPhongSua === "") {
       alert("Giá phòng không được bỏ trống!");
       return;
     }
-    if (values.giaDienSua === "" ) {
+    if (values.giaDienSua === "") {
       alert("Giá điện không được bỏ trống!");
       return;
     }
-    if (values.giaNuocSua === "" ) {
+    if (values.giaNuocSua === "") {
       alert("Giá nước không được bỏ trống!");
       return;
     }
-    if (values.chieuDaiSua === "" ) {
+    if (values.chieuDaiSua === "") {
       alert("Chiều dài không được bỏ trống!");
       return;
     }
-    if (values.chieuRongSua === "" ) {
+    if (values.chieuRongSua === "") {
       alert("Chiều rộng không được bỏ trống!");
       return;
     }
-    if (values.tenPhongSua === "" ) {
+    if (values.tenPhongSua === "") {
       alert("Tên phòng không được bỏ trống!");
       return;
     }
-    if (values.moTaSua === "" ) {
+    if (values.moTaSua === "") {
       alert("Mô tả không được bỏ trống!");
       return;
     }
@@ -543,7 +557,25 @@ export default function TypographyPage(props) {
   const handleChangegioitinh = (event) => {
     setValue(event.target.value);
   };
+
+  const renderPhotoss = (source) => {
+    console.log("source: ", source);
+    return source.map((photo) => {
+      console.log(photo.tenhinh);
+      return <img className="Anh"  src={
+        "http://localhost:8000/upload/"+ photo.tenhinh
+      } alt="" key={photo} />;
+    });
+  };
+  const getDataPost = async (id) => {
+    const baseUrl = "http://localhost:8000/getlisstimg/"+ id;
+    const response = await axios.get(baseUrl);
+    setDataPost(response.data)
+
+  };
+  
   useEffect(() => {
+    getDataPost(props.location.state.idroom);
     setLoaiPhong(props.location.state.idLoaiPhong);
     setValue(props.location.state.gioiTinh);
   }, []);
@@ -583,29 +615,26 @@ export default function TypographyPage(props) {
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <div style={{ marginBottom: 20 }} className={classes.image}>
-            <form
-              action="http://localhost:8000/uploadfile"
-              enctype="multipart/form-data"
-              method="POST"
-            >
-              {userInfo.filepreview === null ? (
-                <img
-                  style={{ width: "50%", borderRadius: 10 }}
-                  src={
-                    "http://localhost:8000/upload/" + props.location.state.image
-                  }
+            <div className="app">
+              <div className="heading">Thêm hình ảnh</div>
+              <form>
+                <input
+                  type="file"
+                  id="file"
+                  multiple
+                  onChange={handleImageChange}
                 />
-              ) : (
-                <img
-                  style={{ width: "50%", borderRadius: 10 }}
-                  className="previewimg"
-                  src={userInfo.filepreview}
-                  alt="UploadImage"
-                />
-              )}
-              <div></div>
-              <input type="file" accept="image/*" onChange={uploadImage} />
-            </form>
+                <div className="label-holder">
+                  <label htmlFor="file" className="label">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                  </label>
+                </div>
+                <div className="result">{renderPhotos(selectedFiles)}</div>
+                <div className="result">
+                {renderPhotoss(dataPost)}
+                  </div>
+              </form>
+            </div>
           </div>
           <form
             action="http://localhost:8000/uploadfile"

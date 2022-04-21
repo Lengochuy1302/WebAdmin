@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 // components
 import PageTitle from "../../components/PageTitle";
 import Widget from "../../components/Widget";
@@ -36,8 +36,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 var article = [];
 export default function Tables(props) {
   var classes = useStyles();
-
-
 
   const [idroom, setidroom] = useState("");
   const [tenPhong, setTenPhong] = useState("");
@@ -111,7 +109,7 @@ export default function Tables(props) {
   };
 
   const getDataHost = async (id_token) => {
-    const baseUrl = "http://localhost:8000/dshost/"+ id_token;
+    const baseUrl = "http://localhost:8000/dshost/" + id_token;
     const response = await axios.get(baseUrl);
     setDataHost(response.data);
   };
@@ -168,8 +166,8 @@ export default function Tables(props) {
   };
 
   useEffect(() => {
-    const thanhvien = localStorage.getItem('thanhvien_token');
-    const id = localStorage.getItem('id_token');
+    const thanhvien = localStorage.getItem("thanhvien_token");
+    const id = localStorage.getItem("id_token");
     if (thanhvien === "host") {
       getDataHost(id);
       changeStyle();
@@ -178,7 +176,6 @@ export default function Tables(props) {
       getDataPost();
       getDataUSER();
     }
-
   }, []);
 
   const refreshPage = () => {
@@ -226,8 +223,8 @@ export default function Tables(props) {
                     }}
                     onClick={() => {
                       handleClickOpenDialog(
-                        dataPost[tableMeta.rowIndex].idroom,
-                        dataPost[tableMeta.rowIndex].image,
+                        dataHost[tableMeta.rowIndex].idroom,
+                        dataHost[tableMeta.rowIndex].image,
                       );
                     }}
                   >
@@ -288,7 +285,7 @@ export default function Tables(props) {
                     component={Link}
                     to={{
                       pathname: "/app/notifications/",
-                      state: dataPost[tableMeta.rowIndex],
+                      state: dataHost[tableMeta.rowIndex],
                     }}
                   >
                     <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -348,10 +345,12 @@ export default function Tables(props) {
         sort: false,
         customBodyRender: (name) => {
           return (
-            <img
-              style={{ width: 100, height: 100, borderRadius: 10 }}
-              src={"http://localhost:8000/upload/" + name}
-            />
+            <div>
+              <img
+                style={{ width: 100, height: 100, borderRadius: 10 }}
+                src={"http://localhost:8000/upload/" + name}
+              />
+            </div>
           );
         },
       },
@@ -374,7 +373,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -388,7 +392,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -402,7 +411,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -433,9 +447,7 @@ export default function Tables(props) {
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
         customBodyRender: (name) => {
-          return (
-          <text>{name}m</text>
-          );
+          return <text>{name}m</text>;
         },
       },
     },
@@ -447,9 +459,7 @@ export default function Tables(props) {
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
         customBodyRender: (name) => {
-          return (
-          <text>{name}m</text>
-          );
+          return <text>{name}m</text>;
         },
       },
     },
@@ -688,7 +698,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -702,7 +717,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -716,7 +736,12 @@ export default function Tables(props) {
         sort: true,
         customBodyRender: (name) => {
           return (
-          <text>{name.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}</text>
+            <text>
+              {name.toLocaleString("en-US", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </text>
           );
         },
       },
@@ -747,9 +772,7 @@ export default function Tables(props) {
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
         customBodyRender: (name) => {
-          return (
-          <text>{name}m</text>
-          );
+          return <text>{name}m</text>;
         },
       },
     },
@@ -761,9 +784,7 @@ export default function Tables(props) {
         setCellProps: () => ({ style: { minWidth: "170px" } }),
         sort: false,
         customBodyRender: (name) => {
-          return (
-          <text>{name}m</text>
-          );
+          return <text>{name}m</text>;
         },
       },
     },
@@ -983,15 +1004,11 @@ export default function Tables(props) {
     },
   ];
 
-
-
   return (
     <>
       <PageTitle title="Quản lý" />
       <Grid container spacing={4}>
-        <Grid 
-                className={styleadmin}
-        item xs={12}>
+        <Grid className={styleadmin} item xs={12}>
           <Button
             variant="contained"
             color="primary"
@@ -1009,9 +1026,7 @@ export default function Tables(props) {
           />
         </Grid>
 
-        <Grid 
-        className={style}
-        item xs={12}>
+        <Grid className={style} item xs={12}>
           <MUIDataTable
             title="Quản lý phòng trọ admin"
             data={dataPost}
@@ -1020,9 +1035,7 @@ export default function Tables(props) {
           />
         </Grid>
 
-        <Grid 
-                className={style}
-        item xs={12}>
+        <Grid className={style} item xs={12}>
           <MUIDataTable
             title="Quản lý username"
             data={dataUSER}
