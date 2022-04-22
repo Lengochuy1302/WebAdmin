@@ -65,6 +65,16 @@ export default function IconsPage () {
   }
   return (
   <>
+  <div
+  style={{
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: "bold",
+    marginTop: 20,
+  }}
+  >
+    Bộ phận hỗ trợ
+  </div>
    <div class="box-chat">
       <div class="box-chat_message">
       {renderMess}

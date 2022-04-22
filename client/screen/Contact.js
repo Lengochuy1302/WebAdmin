@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
   const getData = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.41:8000/dssp/" + pageNumber,
+        "http://172.16.10.166:8000/dssp/" + pageNumber,
       );
       const json = await response.json();
       console.log(json);
@@ -240,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
                       <Image
                         style={styles.slidet}
                         source={{
-                          uri: "http://192.168.1.41:8000/upload/" + item.image,
+                          uri: "http://172.16.10.166:8000/upload/" + item.image,
                         }}
                       />
                       <View

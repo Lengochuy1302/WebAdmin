@@ -24,7 +24,7 @@ export default function Signup({ navigation }) {
       return;
     }
 
-    fetch("http://192.168.1.41:8000/singupclient", {
+    fetch("http://172.16.10.166:8000/singupclient", {
       method: "POST",
       headers: {
         Accept: "application/json",

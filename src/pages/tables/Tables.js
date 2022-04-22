@@ -124,7 +124,7 @@ export default function Tables(props) {
     if (trangthai == "Tạm khóa") {
       return;
     }
-    fetch("http://192.168.1.41:8000/addtrangthai", {
+    fetch("http://172.16.10.166:8000/addtrangthai", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -142,7 +142,7 @@ export default function Tables(props) {
     if (trangthai == "Hoạt động") {
       return;
     }
-    fetch("http://192.168.1.41:8000/addtrangthai", {
+    fetch("http://172.16.10.166:8000/addtrangthai", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -289,37 +289,6 @@ export default function Tables(props) {
                     }}
                   >
                     <i class="fa fa-pencil" aria-hidden="true"></i>
-                  </IconButton>
-                </>
-              }
-            />
-          );
-        },
-      },
-    },
-    {
-      name: "",
-      options: {
-        filter: false,
-        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
-        sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <FormControlLabel
-              control={
-                <>
-                  <IconButton
-                    startIcon={<CloudUploadIcon />}
-                    variant="contained"
-                    color="secondary"
-                    size="large"
-                    // component={Link}
-                    // to={{
-                    //   pathname: "/app/notifications/",
-                    //   state: dataPost[tableMeta.rowIndex],
-                    // }}
-                  >
-                    <i class="fa fa-eye" aria-hidden="true"></i>
                   </IconButton>
                 </>
               }
@@ -617,37 +586,6 @@ export default function Tables(props) {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                </>
-              }
-            />
-          );
-        },
-      },
-    },
-    {
-      name: "",
-      options: {
-        filter: false,
-        setCellProps: () => ({ style: { minWidth: "80px", maxWidth: "80px" } }),
-        sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <FormControlLabel
-              control={
-                <>
-                  <IconButton
-                    startIcon={<CloudUploadIcon />}
-                    variant="contained"
-                    color="secondary"
-                    size="large"
-                    // component={Link}
-                    // to={{
-                    //   pathname: "/app/notifications/",
-                    //   state: dataPost[tableMeta.rowIndex],
-                    // }}
-                  >
-                    <i class="fa fa-eye" aria-hidden="true"></i>
-                  </IconButton>
                 </>
               }
             />

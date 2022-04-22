@@ -44,7 +44,7 @@ export default function UserScreen({navigation}) {
         if (isNaN(giaSanPham) == false) {
 
           console.log("Add san pham")
-          fetch('http://192.168.1.41:3000/addProduc/', {
+          fetch('http://172.16.10.166:3000/addProduc/', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -82,7 +82,7 @@ export default function UserScreen({navigation}) {
     setModalVisible(!modalVisible);
 
     console.log("Sửa san pham")
-    fetch('http://192.168.1.41:3000/updateProduc/', {
+    fetch('http://172.16.10.166:3000/updateProduc/', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -108,7 +108,7 @@ export default function UserScreen({navigation}) {
 
   const getData = async () => {
     try {
-      const response = await fetch('http://192.168.1.41:3000/trang/' + pageNumber);
+      const response = await fetch('http://172.16.10.166:3000/trang/' + pageNumber);
       const json = await response.json();
       console.log("json")
       console.log(json)
@@ -140,7 +140,7 @@ export default function UserScreen({navigation}) {
   }
   const xoaSanPham = (id) => {
     console.log("Xoa San Pham")
-    fetch('http://192.168.1.41:3000/deleteProduc/', {
+    fetch('http://172.16.10.166:3000/deleteProduc/', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

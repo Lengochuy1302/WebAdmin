@@ -60,7 +60,7 @@ const DetailScreen = ({ route }) => {
   const [dataImg, setDataImg] = useState([]);
   const getData = async (id) => {
     try {
-      const response = await fetch("http://192.168.1.41:8000/dssv/" + id);
+      const response = await fetch("http://172.16.10.166:8000/dssv/" + id);
       const json = await response.json();
       console.log("data:", json[0].idroom);
       console.log("data:", json[0].luotXem);
@@ -75,7 +75,7 @@ const DetailScreen = ({ route }) => {
   const getDataImg = async (id) => {
     try {
       const response = await fetch(
-        "http://192.168.1.41:8000/getlisstimg/" + id,
+        "http://172.16.10.166:8000/getlisstimg/" + id,
       );
       const json = await response.json();
       console.log("list img:", json);
@@ -88,7 +88,7 @@ const DetailScreen = ({ route }) => {
   };
 
   const setDataView = async (idrom, viewcount) => {
-    fetch("http://192.168.1.41:8000/updateView", {
+    fetch("http://172.16.10.166:8000/updateView", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -120,7 +120,7 @@ const DetailScreen = ({ route }) => {
 
   const addYeuThich = () => {
     console.log("id phong: ", idphongtro);
-    fetch("http://192.168.1.41:8000/yeuthich", {
+    fetch("http://172.16.10.166:8000/yeuthich", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -159,7 +159,7 @@ const DetailScreen = ({ route }) => {
                           resizeMode="stretch"
                           style={styles.slideimg}
                           source={{
-                            uri: "http://192.168.1.41:8000/upload/" + e.tenhinh,
+                            uri: "http://172.16.10.166:8000/upload/" + e.tenhinh,
                           }}
                         />
                       ))}

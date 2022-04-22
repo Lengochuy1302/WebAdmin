@@ -12,7 +12,7 @@
   width: 50%;
 }
 .your-message {
-  background: #009bff;
+  background: #eb4848;
   margin: 1em;
   border-radius: 1em;
   padding: 1em;
@@ -31,16 +31,16 @@
 }
 
 .box-chat_message {
-  min-height: 60vh;  
-  max-height: 60vh;  
+  min-height: 70vh;  
+  max-height: 70vh;  
   overflow-y: auto;
   
 }
 .box-chat {
-  width:70%;
+  width:90%;
   margin: 0 auto;
-  margin-top: 100px;
-  box-shadow: 0 0 10px 0 black;
+  margin-top: 10px;
+  box-shadow: 0 0 2px 0 black;
   border-radius: 1em;
 }
 
@@ -49,32 +49,33 @@
   padding: 1em;
 }
 
-/* textarea {
-  width: 80%;
+.send-box textarea {
+  width: 83%;
+  height: 42px;
   margin: 0;
-  padding: 0.5em;
-  background: #ebf5ff;
-  border-radius: 2em; 
+  padding: 1em;
+  background: rgba(248, 248, 248, 0.699);
+  border-radius: 10px; 
   display: flex;
   float: left;
 }
 
-button {
-  width: 10%;
-  background: #6650ff;
-  color: white;
-  margin-left: 10px;
+.send-box button {
+  width: 15%;
+  background: #eb4848;
+  color: rgb(255, 255, 255);
+  margin-left: 5px;
   border: none;
-  border-radius: 1em;
+  border-radius: 10px;
   cursor: pointer;
   padding: 1em;
   text-align: center;
 
 }
-button:hover {
+.send-box button:hover {
   background: black;
 }
-textarea:focus {outline:0;} */
+.send-box textarea:focus {outline:0;}
 
 
 /* width */
