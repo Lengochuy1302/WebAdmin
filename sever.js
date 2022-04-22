@@ -151,7 +151,7 @@ app.get("/userhost", (req, res) => {
 
 // hiển thị ds bảng sv theo khoảng id
 app.get("/dssp/:id", (req, res) => {
-  var limit = 3;
+  var limit = 5;
   var ofsset = (req.params.id - 1) * limit;
   var sql =
     "SELECT * FROM room ORDER BY idroom desc LIMIT " + ofsset + " , " + limit;
@@ -569,19 +569,20 @@ app.get("/getdatayeuthich/:iduser", (req, res) => {
   con.query(sql, function (err, result, fields) {
     result.map((item, index) => {
       const idPhong = item.idRoom;
-      console.log("lặp :",idPhong);
+
       var sql = "SELECT * FROM room WHERE idroom = '" + idPhong + "'";
       console.log(sql);
       con.query(sql, function (err, data, fields) {
         console.log("list :",      data.length );
         data.map((item, index) => {
           console.log(item.tenPhong);
+          console.log("lặp :", item.idLoaiPhong);
           var itemnew = {
             idroom: item.idroom,
             image: item.image,
             tenPhong: item.tenPhong,
             giaPhong: item.giaPhong,
-            loaiPhong: item.loaiPhong,
+            idLoaiPhong: item.idLoaiPhong,
             chieuDai: item.chieuDai,
             chieuRong: item.chieuRong,
             giaNuoc: item.giaNuoc,

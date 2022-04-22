@@ -16,6 +16,12 @@ import {
   Image,
 } from "react-native";
 import Swipeout from 'react-native-swipeout';
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { Foundation } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { FlatGrid } from 'react-native-super-grid';
 const Width = Dimensions.get("screen").width - 230;
 const Height = Dimensions.get("screen").height;
@@ -30,10 +36,10 @@ const HomeScreen = ({ navigation }) => {
       console.log("kkks");
     try {
       const response = await fetch(
-        "http://192.168.1.25:8000/getdatayeuthich/" +idtk,
+        "http://192.168.1.41:8000/getdatayeuthich/" +idtk,
       );
       const json = await response.json();
-      console.log(json);
+      console.log("danh sach: ",json);
       setData(json);
     } catch (error) {
       console.error(error);
@@ -50,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
 
  const removeSanPham = (id) => {
   console.log("Remove san pham");
-  fetch("http://192.168.1.25:8000/removeyeuthich", {
+  fetch("http://192.168.1.41:8000/removeyeuthich", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -70,6 +76,16 @@ const HomeScreen = ({ navigation }) => {
       getData(value);
     });
   };
+  const rendericongioitinh = (name) => {
+    console.log("source: ", name);
+    if (name === "Cả Hai") {
+      return <Ionicons name="male-female" size={17} color="#11cf33" />;
+    } else if (name === "Nữ") {
+      return <Foundation name="female-symbol" size={17} color="#e64080" />;
+    } else {
+      return <Foundation name="male-symbol" size={17} color="#39b5db" />;
+    }
+  };
 
   useEffect(() => {
     AsyncStorage.getItem("iduser").then((value) => {
@@ -80,162 +96,191 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, paddingLeft: 9, paddingRight: 9, paddingTop: 8, marginTop: 0 }}>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList
-          data={data}
-          keyExtractor={({ id }, index) => id}
-          renderItem={({ item }) => (
-            
-            <Swipeout
-            style={{
-              
-              marginBottom: 10,
-              borderRadius: 10,
-              backgroundColor: "white",
-              borderRadius: 20,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 5,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-            }}
-            right={[
-              {
-                onPress: () => {
-                  Alert.alert(
-                    "Cảnh báo",
-                    "Bạn muốn xóa nó?",
-                    [
-                      {
-                        text: "No",
-                        onPress: () => console.log("Cancel"),
-                        style: "cancel",
-                      },
-                      {
-                        text: "Yes",
-                        onPress: () => {
-                          removeSanPham(item.idroom)
-                        },
-                      },
-                    ],
-                    { cancelable: true }
-                  );
-                },
-                backgroundColor: "#FF6666",
-                text: "Xóa",
-              },
-              
-            ]}
-            >
-           <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Chi tiết phòng", {
-                  idRoom: item.idroom,
-                  image: item.image,
-                  tenPhong: item.tenPhong,
-                  giaPhong: item.giaPhong,
-                  loaiPhong: item.idLoaiPhong,
-                  chieuDai: item.chieuDai,
-                  chieuRong: item.chieuRong,
-                  giaNuoc: item.giaNuoc,
-                  giaDien: item.giaDien,
-                  mota: item.moTa,
-                  tinh: item.tinh,
-                  quan: item.quan,
-                  phuong: item.phuong,
-                  duong: item.duong,
-                  user: item.idUser,
-                  gioiTinh: item.gioiTinh,
-                  ngayTao: item.ngayTao,
-                  luotXem: item.luotXem,
-                })
-              }
-              >
-                     <View style={{fontSize: 17, marginBottom: 0 }}>
-                  <Image style={styles.slide} source={{ uri: "http://192.168.1.25:8000/upload/" +  item.image}} />
+    <View>
+      <View style={{ padding: 0, marginTop: 0, height: "100%" }}>
+        <View style={{ padding: 10, marginTop: 0, height: "100%" }}>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <FlatList
+              data={data}
+              keyExtractor={({ id }, index) => id}
+              renderItem={({ item }) => (
+                <Swipeout
+                style={{
+                  marginBottom: 10,
+                  height: Height1 * 0.19,
+                  borderRadius: 10,
+                  backgroundColor: "white",
+                  borderRadius: 10,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 5,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                }}
+                right={[
+                  {
+                    onPress: () => {
+                      Alert.alert(
+                        "Cảnh báo",
+                        "Bạn muốn xóa nó?",
+                        [
+                          {
+                            text: "No",
+                            onPress: () => console.log("Cancel"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "Yes",
+                            onPress: () => {
+                              removeSanPham(item.idroom)
+                            },
+                          },
+                        ],
+                        { cancelable: true }
+                      );
+                    },
+                    backgroundColor: "#FF6666",
+                    text: "Xóa",
+                  },
+                  
+                ]}
+                >
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(
+                      "Chi tiết phòng",
+                      AsyncStorage.setItem("keyidroom", item.idroom),
+                    )
+                  }
+                >
                   <View
                     style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.243)",
-                      width: Width,
-                      height: Height * 0.25,
-                      position: "absolute",
-                      borderRadius: 10,
+                      fontSize: 17,
+                      marginBottom: 10,
+                      flexDirection: "row",
                     }}
                   >
+                    <View>
+                      <Image
+                        style={styles.slidet}
+                        source={{
+                          uri: "http://192.168.1.41:8000/upload/" + item.image,
+                        }}
+                      />
+                      <View
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.243)",
+                          width: Width / 1.17,
+                          height: Height * 0.19,
+                          position: "absolute",
+                          borderRadius: 10,
+                        }}
+                      ></View>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: 35,
+                        marginLeft: 5,
+                        fontSize: 20,
+                        marginBottom: 15,
+                        
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginBottom: 10,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: "#adadad",
+                          }}
+                        >
+                          {item.idLoaiPhong}
+                        </Text>
+                        <Text
+                          style={{
+                            marginLeft: 5,
+                          }}
+                        >
+                          {rendericongioitinh(item.gioiTinh)}
+                        </Text>
+                        <Text
+                          style={{
+                            marginLeft: '30%',
+                            fontSize: 16,   
+                            color: "#adadad",
+                       
+                          }}
+                        >
+                         <FontAwesome5 name="eye" size={17} color="#adadad" /> {item.luotXem}
+                        </Text>
 
+                      </View>
+
+                      <Text
+                        style={{
+                          fontSize: 19,
+                          fontWeight: "bold",
+                          color: "orange",
+                          marginBottom: 5,
+                        }}
+                      >
+                        {item.tenPhong}
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginBottom: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                        color: "red"
+                       
+                          }}
+                        >
+                           {item.giaPhong.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                        </Text>
+                        <Text
+                          style={{
+                        marginLeft:"30%",
+                        color: "green"
+                          }}
+                        >
+                         {item.chieuDai * item.chieuRong}m²
+                        </Text>
+                      </View>
+                      <Text
+                       style={{
+                        width: '65%'
+                      }}
+                      >
+                      {item.duong}, {item.phuong}, {item.quan},
+                        {item.tinh}
+                      </Text>
+                    </View>
                   </View>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop:130,
-                      marginLeft: 5,
-                      textAlign: 'left',
-                      fontSize: 20,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {item.tenPhong}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop:160,
-                      marginLeft: 5,
-                      textAlign: 'left',
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Giá: {item.giaPhong}    S: {item.chieuDai*item.chieuRong}m²
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop:175,
-                      marginLeft: 5,
-                      textAlign: 'left',
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Giới tính: {item.gioiTinh}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop:190,
-                      marginLeft: 5,
-                      textAlign: 'left',
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Đ/c: {item.tinh}, {item.quan}, {item.phuong}, {item.duong}
-                  </Text>
-
-                </View>
-              </TouchableOpacity>
-          </Swipeout>
+                </TouchableOpacity>
+                </Swipeout>
+              )}
+              onRefresh={onRefresh}
+              progressViewOffset={100}
+              refreshing={isLoading}
+            />
           )}
-          onRefresh={onRefresh}
-          progressViewOffset={100}
-          refreshing={isLoading}
-        />
-      )}
+        </View>
+      </View>
     </View>
   );
 };
@@ -305,8 +350,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   slide: {
-    borderRadius: 10,
-    width: Width,
+    width: Width1,
     height: Height * 0.25,
+  },
+  slidet: {
+    width: Width / 1.17,
+    height: Height * 0.19,
+    borderRadius: 10,
+  },
+  slidev: {
+    width: Width1,
+    height: Height * 0.35,
+    marginBottom: 15,
   },
 });

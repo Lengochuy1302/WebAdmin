@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
-const host = "http://192.168.1.25:4000";
+const host = "http://192.168.1.41:4000";
 
 
 export default function SettingScreen({ navigation }) {

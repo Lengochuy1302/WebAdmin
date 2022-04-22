@@ -14,6 +14,11 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { Foundation } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -23,7 +28,6 @@ const Width = Dimensions.get("screen").width - 20;
 const Height = Dimensions.get("screen").height;
 const Width1 = Dimensions.get("screen").width;
 const Height1 = Dimensions.get("screen").height;
-import Logo from "../assets/list.png";
 const HomeScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -53,37 +57,6 @@ const HomeScreen = ({ navigation }) => {
   const [images, setImages] = useState(
     "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
   );
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
-  const pickImageSua = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImages(result.uri);
-    }
-  };
 
   const getDataID = async () => {
     try {
@@ -94,14 +67,6 @@ const HomeScreen = ({ navigation }) => {
     } catch (e) {
       // error reading value
     }
-  };
-
-  const huythem = () => {
-    setImage(
-      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
-    );
-    setValue("Nam");
-    setModalVisible(false);
   };
 
   const picktrangsau = () => {
@@ -126,224 +91,18 @@ const HomeScreen = ({ navigation }) => {
     getData();
   };
 
-  const addSanPham = () => {
-    let re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    let sd = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-    if (tenSanPham === "" || tenSanPham === null) {
-      Alert.alert("Cảnh báo", "Tên không được bỏ trống!");
-      return;
-    }
-
-    if (giaSanPham === "" || giaSanPham === null) {
-      Alert.alert("Cảnh báo", "Tuổi không được bỏ trống!");
-      return;
-    }
-
-    if (masosv === "" || masosv === null) {
-      Alert.alert("Cảnh báo", "MSSV không được bỏ trống!");
-      return;
-    }
-
-    if (diachi === "" || diachi === null) {
-      Alert.alert("Cảnh báo", "Địa chỉ không được bỏ trống!");
-      return;
-    }
-
-    if (sdt === "" || sdt === null) {
-      Alert.alert("Cảnh báo", "Số ĐT không được bỏ trống!");
-      return;
-    }
-
-    if (sdt.length > 10 || sdt.length < 10) {
-      Alert.alert("Cảnh báo", "Số ĐT không đúng!");
-      return;
-    }
-
-    if (email === "" || email === null) {
-      Alert.alert("Cảnh báo", "Email không được bỏ trống!");
-      return;
-    }
-
-    if (!re.test(email)) {
-      Alert.alert("Cảnh báo", "Email không hợp lệ!");
-      return;
-    }
-
-    if (!sd.test(sdt)) {
-      Alert.alert("Cảnh báo", "Số điện thoại không hợp lệ!");
-      return;
-    }
-
-    if (tenSanPham.length < 5) {
-      Alert.alert("Cảnh báo", "Tên của bạn quá ngắn");
-      return;
-    }
-    if (parseInt(giaSanPham) < 0 || parseInt(giaSanPham) > 100) {
-      Alert.alert("Cảnh báo", "Tuổi của bạn không đúng");
-      return;
-    }
-
-    fetch("http://192.168.1.25:3000/addProduc", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ten: tenSanPham,
-        tuoi: giaSanPham,
-        diachi: diachi,
-        hinhanh: image,
-        gioitinh: value,
-        mssv: masosv,
-        sdt: sdt,
-        email: email,
-      }),
-    }).then((response) => {
-      console.log(JSON.stringify(response, null, 4));
-      return response.json();
-    });
-    onPressLearnMore(1);
-    setModalVisible(!modalVisible);
-    onPressLearnMore(1);
-    onItemnull();
-  };
-
-  const suaSanPham = () => {
-    if (tenSanPhams === "" || tenSanPhams === null) {
-      Alert.alert("Cảnh báo", "Tên không được bỏ trống!");
-      return;
-    }
-
-    if (giaSanPhams === "" || giaSanPhams === null) {
-      Alert.alert("Cảnh báo", "Tuổi không được bỏ trống!");
-      return;
-    }
-
-    if (diachis === "" || diachis === null) {
-      Alert.alert("Cảnh báo", "Địa chỉ không được bỏ trống!");
-      return;
-    }
-
-    if (masosvs === "" || masosvs === null) {
-      Alert.alert("Cảnh báo", "MSSV không được bỏ trống!");
-      return;
-    }
-
-    if (sdts === "" || sdts === null) {
-      Alert.alert("Cảnh báo", "Số ĐT không được bỏ trống!");
-      return;
-    }
-
-    if (emails === "" || emails === null) {
-      Alert.alert("Cảnh báo", "Email không được bỏ trống!");
-      return;
-    }
-
-    if (tenSanPhams.length < 5) {
-      Alert.alert("Cảnh báo", "Tên của bạn quá ngắn");
-      return;
-    }
-    if (parseInt(giaSanPhams) < 0 || parseInt(giaSanPhams) > 100) {
-      Alert.alert("Cảnh báo", "Tuổi của bạn không đúng");
-      return;
-    }
-
-    console.log("Sửa san pham");
-    fetch("http://192.168.1.25:3000/updateProduc", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: iditem,
-        tens: tenSanPhams,
-        tuois: giaSanPhams,
-        diachis: diachis,
-        hinhanhs: images,
-        gioitinhs: values,
-        mssvs: masosvs,
-        sdts: sdts,
-        emails: emails,
-      }),
-    }).then((response) => {
-      console.log(JSON.stringify(response, null, 4));
-      return response.json();
-    });
-    onPressLearnMore(1);
-    console.log("Update Done");
-    onPressLearnMore(1);
-    onItemnull();
-    setModalVisiblec(!modalVisiblec);
-  };
-
-  const removeSanPham = (id) => {
-    console.log("Remove san pham");
-    fetch("http://192.168.1.25:3000/remove", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-      }),
-    }).then((response) => {
-      console.log(JSON.stringify(response, null, 4));
-      return response.json();
-      if (response == "ok") {
-        alert(" insert thành công");
-      }
-    });
-    onPressLearnMore(1);
-    onPressLearnMore(1);
-    onItemnull();
-  };
-
-  const onItemnull = () => {
-    setTenSanPham(null);
-    setGiaSanPham(null);
-    setdiachi(null);
-    sethinhanh(null);
-    sethinhanhs(null);
-    setTenSanPhams(null);
-    setGiaSanPhams(null);
-    setdiachis(null);
-    setValue("Nam");
-    setmasosv(null);
-    setemail(null);
-    setsdt(null);
-    setmasosvs(null);
-    setemails(null);
-    setsdts(null);
-    setImage(
-      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
-    );
-  };
-
-  const onItem = (item) => {
-    setModalVisiblec(true);
-    setTenSanPhams(item.ten);
-    setGiaSanPhams(item.tuoi);
-    setdiachis(item.diachi);
-    sethinhanhs(item.hinhanh);
-    setImages(item.hinhanh);
-    setValues(item.sex);
-    setidItem(item.id);
-    setmasosvs(item.mssv);
-    setemails(item.gmail);
-    setsdts(item.sdt);
-  };
-
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisiblec, setModalVisiblec] = useState(false);
-
+  const imagev = [
+    "https://github.com/Lengochuy1302/RoomSearchProject/blob/master/app/src/main/res/drawable/a03.png?raw=true",
+    "https://github.com/Lengochuy1302/RoomSearchProject/blob/master/app/src/main/res/drawable/a02.png?raw=true",
+    "https://github.com/Lengochuy1302/RoomSearchProject/blob/master/app/src/main/res/drawable/a01.png?raw=true",
+    "https://github.com/Lengochuy1302/RoomSearchProject/blob/master/app/src/main/res/drawable/logoo1.jpg?raw=true",
+  ];
   const getData = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.25:8000/dssp/" + pageNumber,
+        "http://192.168.1.41:8000/dssp/" + pageNumber,
       );
       const json = await response.json();
       console.log(json);
@@ -354,11 +113,15 @@ const HomeScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-
-  const onPressLearnMore = (getPage) => {
-    setPagetNumber(getPage);
-    console.log(pageNumber);
-    getData();
+  const rendericongioitinh = (name) => {
+    console.log("source: ", name);
+    if (name === "Cả Hai") {
+      return <Ionicons name="male-female" size={17} color="#11cf33" />;
+    } else if (name === "Nữ") {
+      return <Foundation name="female-symbol" size={17} color="#e64080" />;
+    } else {
+      return <Foundation name="male-symbol" size={17} color="#39b5db" />;
+    }
   };
 
   useEffect(() => {
@@ -372,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
         style={{
           width: "100%",
           height: 97,
-          backgroundColor: "#f57c00",
+          backgroundColor: "#fff",
           flexDirection: "row",
         }}
       >
@@ -387,7 +150,7 @@ const HomeScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <Image style={{ width: 26, height: 26 }} source={Logo} />
+            <Entypo name="list" size={24} color="black" />
           </TouchableOpacity>
         </View>
         <Text
@@ -396,13 +159,13 @@ const HomeScreen = ({ navigation }) => {
             height: 40,
             borderRadius: 50,
             marginTop: 68,
-            marginLeft: 55,
+            marginLeft: 45,
             fontSize: 15,
             fontWeight: "700",
-            color: "#fff",
+            color: "#000",
           }}
         >
-          Trang chủ
+          AETH ROOM
         </Text>
         <View
           style={{
@@ -423,837 +186,203 @@ const HomeScreen = ({ navigation }) => {
                 marginTop: -2,
               }}
             >
-              <AntDesign name="hearto" size={24} color="white" />
+              <AntDesign name="hearto" size={24} color="black" />
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ padding: 10, marginTop: 0, height: "89%" }}>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <FlatList
-            data={data}
-            keyExtractor={({ id }, index) => id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Chi tiết phòng",  AsyncStorage.setItem('keyidroom',item.idroom))
-                }
-              >
-                <View style={{ fontSize: 17, marginBottom: 10 }}>
-                  <Image
-                    style={styles.slide}
-                    source={{
-                      uri: "http://192.168.1.25:8000/upload/" + item.image,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.243)",
-                      width: Width,
-                      height: Height * 0.25,
-                      position: "absolute",
-                      borderRadius: 10,
-                    }}
-                  ></View>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop: 120,
-                      marginLeft: 5,
-                      textAlign: "left",
-                      fontSize: 25,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {item.tenPhong}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop: 150,
-                      marginLeft: 5,
-                      textAlign: "left",
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    {item.giaPhong.toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "VND",
-                    })}{" "}
-                    - S: {item.chieuDai * item.chieuRong}m²
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop: 165,
-                      marginLeft: 5,
-                      textAlign: "left",
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Loại phòng: {item.idLoaiPhong}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop: 182,
-                      marginLeft: 5,
-                      textAlign: "left",
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Giới tính: {item.gioiTinh}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      position: "absolute",
-                      width: Width,
-                      marginTop: 199,
-                      marginLeft: 5,
-                      textAlign: "left",
-                      fontSize: 15,
-                      fontWeight: "500",
-                    }}
-                  >
-                    Đ/c: {item.tinh}, {item.quan}, {item.puong}, {item.duong}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            onRefresh={onRefresh}
-            progressViewOffset={100}
-            refreshing={isLoading}
-          />
-        )}
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
+      <View style={{ padding: 0, marginTop: 0, height: "89%" }}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          horizontal
+          style={styles.slidev}
         >
-          <ScrollView>
-            <View
-              style={{
-                marginTop: "35%",
-                marginLeft: 10,
-                marginRight: 10,
-                color: "black",
-                borderRadius: 20,
-                backgroundColor: "white",
-                borderRadius: 20,
-                padding: 25,
-
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                elevation: 5,
-              }}
-            >
-              <Text
-                style={{
-                  height: 40,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#f57c00",
-                  padding: 0,
-                  marginBottom: 10,
-                }}
-              >
-                THÊM SINH VIÊN
-              </Text>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: -20,
-                  flexDirection: "row",
-                }}
-              >
+          {imagev.map((e, index) => (
+            <Image
+              key={e}
+              resizeMode="stretch"
+              style={styles.slide}
+              source={{ uri: e }}
+            />
+          ))}
+        </ScrollView>
+        <View style={{ padding: 10, marginTop: 0, height: "70%" }}>
+          <View>
+            <Text style={{ marginTop: -15, fontSize: 20, marginBottom: 10 }}>
+              <MaterialIcons name="security" size={17} color="black" /> Phòng
+              trọ
+            </Text>
+          </View>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <FlatList
+              data={data}
+              keyExtractor={({ id }, index) => id}
+              renderItem={({ item }) => (
                 <TouchableOpacity
-                  onPress={pickImage}
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 0,
-                    marginLeft: 10,
-                    marginTop: 10,
-                  }}
+                  onPress={() =>
+                    navigation.navigate(
+                      "Chi tiết phòng",
+                      AsyncStorage.setItem("keyidroom", item.idroom),
+                    )
+                  }
                 >
-                  <Image
-                    source={{ uri: image }}
+                  <View
                     style={{
-                      width: 110,
-                      height: 110,
-                      marginBottom: 15,
-                      borderRadius: 100,
-
-                      zIndex: 1,
+                      fontSize: 17,
+                      marginBottom: 10,
+                      flexDirection: "row",
                     }}
-                  />
+                  >
+                    <View>
+                      <Image
+                        style={styles.slidet}
+                        source={{
+                          uri: "http://192.168.1.41:8000/upload/" + item.image,
+                        }}
+                      />
+                      <View
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.243)",
+                          width: Width / 2.3,
+                          height: Height * 0.19,
+                          position: "absolute",
+                          borderRadius: 10,
+                        }}
+                      ></View>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: 35,
+                        marginLeft: 5,
+                        fontSize: 20,
+                        marginBottom: 15,
+                        
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginBottom: 10,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: "#adadad",
+                          }}
+                        >
+                          {item.idLoaiPhong}
+                        </Text>
+                        <Text
+                          style={{
+                            marginLeft: 5,
+                          }}
+                        >
+                          {rendericongioitinh(item.gioiTinh)}
+                        </Text>
+                        <Text
+                          style={{
+                            marginLeft: '30%',
+                            fontSize: 16,   
+                            color: "#adadad",
+                       
+                          }}
+                        >
+                         <FontAwesome5 name="eye" size={17} color="#adadad" /> {item.luotXem}
+                        </Text>
+
+                      </View>
+
+                      <Text
+                        style={{
+                          fontSize: 19,
+                          fontWeight: "bold",
+                          color: "orange",
+                          marginBottom: 5,
+                        }}
+                      >
+                        {item.tenPhong}
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          marginBottom: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                        color: "red"
+                       
+                          }}
+                        >
+                           {item.giaPhong.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                        </Text>
+                        <Text
+                          style={{
+                        marginLeft:"30%",
+                        color: "green"
+                          }}
+                        >
+                         {item.chieuDai * item.chieuRong}m²
+                        </Text>
+                      </View>
+                      <Text
+                       style={{
+                        width: '65%'
+                      }}
+                      >
+                      {item.duong}, {item.phuong}, {item.quan},
+                        {item.tinh}
+                      </Text>
+                    </View>
+                  </View>
                 </TouchableOpacity>
-
-                <View>
-                  <Text
-                    style={{
-                      marginLeft: 12,
-                      marginBottom: -10,
-                    }}
-                  >
-                    Tên sinh viên:
-                  </Text>
-                  <TextInput
-                    style={{
-                      width: 200,
-                      height: 40,
-                      margin: 12,
-                      color: "black",
-                      backgroundColor: "#F6F7FB",
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
-                    onChangeText={setTenSanPham}
-                    keyboardType="default"
-                  />
-
-                  <Text
-                    style={{
-                      marginLeft: 12,
-                      marginBottom: -10,
-                    }}
-                  >
-                    Mã số SV:
-                  </Text>
-                  <TextInput
-                    style={{
-                      height: 40,
-                      margin: 12,
-                      color: "red",
-                      backgroundColor: "#F6F7FB",
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
-                    onChangeText={setmasosv}
-                    keyboardType="default"
-                  />
-                </View>
-              </View>
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Độ tuổi:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setGiaSanPham}
-                keyboardType="number-pad"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Giới tính:
-              </Text>
-              <RadioButton.Group
-                onValueChange={(newValue) => setValue(newValue)}
-                value={value}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 20,
-                    paddingBottom: 15,
-                    paddingLeft: "7%",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Nam" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Nam
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "lightblue",
-                      }}
-                    >
-                      {" "}
-                      ♂
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 15,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Nữ" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Nữ
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "pink",
-                      }}
-                    >
-                      {" "}
-                      ♀
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 15,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Khác" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Khác
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "red",
-                      }}
-                    >
-                      {" "}
-                      ⚥
-                    </Text>
-                  </View>
-                </View>
-              </RadioButton.Group>
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Địa chỉ:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setdiachi}
-                keyboardType="default"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Email:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setemail}
-                keyboardType="default"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Số điện thoại:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setsdt}
-                keyboardType="default"
-              />
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  title="Thêm sinh viên"
-                  accessibilityLabel="Trang 1"
-                  onPress={() => addSanPham()}
-                />
-
-                <Button
-                  title="Hủy bỏ"
-                  color="red"
-                  accessibilityLabel="Trang 1"
-                  onPress={() => huythem()}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </Modal>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisiblec}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisiblec(!modalVisiblec);
-          }}
-        >
-          <ScrollView>
-            <View
-              style={{
-                marginTop: "35%",
-                marginLeft: 20,
-                marginRight: 20,
-                color: "black",
-                borderRadius: 20,
-                padding: 10,
-                backgroundColor: "white",
-                borderRadius: 20,
-                padding: 25,
-
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                elevation: 5,
-              }}
-            >
-              <Text
-                style={{
-                  height: 40,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "green",
-                  marginBottom: 10,
-                }}
-              >
-                SỬA SINH VIÊN
-              </Text>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: -20,
-                  flexDirection: "row",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={pickImageSua}
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 0,
-                    marginLeft: 10,
-                    marginTop: 10,
-                  }}
-                >
-                  <Image
-                    source={{ uri: images }}
-                    style={{
-                      width: 110,
-                      height: 110,
-                      marginBottom: 15,
-                      borderRadius: 100,
-
-                      zIndex: 1,
-                    }}
-                  />
-                </TouchableOpacity>
-
-                <View>
-                  <Text
-                    style={{
-                      marginLeft: 12,
-                      marginBottom: -10,
-                    }}
-                  >
-                    Tên sinh viên:
-                  </Text>
-                  <TextInput
-                    style={{
-                      width: 200,
-                      height: 40,
-                      margin: 12,
-                      color: "black",
-                      backgroundColor: "#F6F7FB",
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
-                    onChangeText={setTenSanPhams}
-                    value={tenSanPhams}
-                    keyboardType="default"
-                  />
-
-                  <Text
-                    style={{
-                      marginLeft: 12,
-                      marginBottom: -10,
-                    }}
-                  >
-                    Mã số SV:
-                  </Text>
-                  <TextInput
-                    style={{
-                      height: 40,
-                      margin: 12,
-                      color: "red",
-                      backgroundColor: "#F6F7FB",
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
-                    onChangeText={setmasosvs}
-                    value={masosvs}
-                    keyboardType="default"
-                  />
-                </View>
-              </View>
-              {/* <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: -20,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={pickImageSua}
-                  style={{ alignItems: "center", justifyContent: "center" }}
-                >
-                  <Image
-                    source={{ uri: images }}
-                    style={{
-                      width: 200,
-                      height: 200,
-                      marginBottom: 15,
-                      borderRadius: 10,
-                      zIndex: 1,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Tên sinh viên:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setTenSanPhams}
-                value={tenSanPhams}
-                keyboardType="default"
-              /> */}
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Độ tuổi:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setGiaSanPhams}
-                value={String(giaSanPhams)}
-                keyboardType="default"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Giới tính:
-              </Text>
-              <RadioButton.Group
-                onValueChange={(newValues) => setValues(newValues)}
-                value={values}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 20,
-                    paddingBottom: 15,
-                    paddingLeft: "7%",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Nam" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Nam
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "lightblue",
-                      }}
-                    >
-                      {" "}
-                      ♂
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 15,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Nữ" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Nữ
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "pink",
-                      }}
-                    >
-                      {" "}
-                      ♀
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 15,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <RadioButton value="Khác" />
-                    <Text
-                      style={{
-                        marginTop: 10,
-                      }}
-                    >
-                      Khác
-                    </Text>
-                    <Text
-                      style={{
-                        marginTop: 10,
-                        color: "red",
-                      }}
-                    >
-                      {" "}
-                      ⚥
-                    </Text>
-                  </View>
-                </View>
-              </RadioButton.Group>
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Địa chỉ:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setdiachis}
-                value={diachis}
-                keyboardType="default"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Email:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setemails}
-                value={emails}
-                keyboardType="default"
-              />
-              <Text
-                style={{
-                  marginLeft: 12,
-                  marginBottom: -10,
-                }}
-              >
-                Số điện thoại:
-              </Text>
-              <TextInput
-                style={{
-                  height: 40,
-                  margin: 12,
-                  color: "black",
-                  backgroundColor: "#F6F7FB",
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onChangeText={setsdts}
-                value={sdts}
-                keyboardType="default"
-              />
-
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  title="Update sinh viên"
-                  accessibilityLabel="Trang 1"
-                  onPress={() => suaSanPham()}
-                />
-
-                <Button
-                  title="Hủy bỏ"
-                  color="red"
-                  accessibilityLabel="Trang 1"
-                  onPress={() => setModalVisiblec(false)}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </Modal>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 15,
-          }}
-        >
-          <Button
-            onPress={() => picktrangtruoc()}
-            title="⇦ Trước"
-            color="black"
-            accessibilityLabel="Trang trước"
-          />
+              )}
+              onRefresh={onRefresh}
+              progressViewOffset={100}
+              refreshing={isLoading}
+            />
+          )}
           <View
             style={{
-              width: 190,
+              flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
+              marginBottom: 15,
             }}
           >
-            <Text
+            <Button
+              onPress={() => picktrangtruoc()}
+              title="⇦ Trước"
+              color="black"
+              accessibilityLabel="Trang trước"
+            />
+            <View
               style={{
-                color: "orange",
+                width: 190,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            ></Text>
+            >
+              <Text
+                style={{
+                  color: "orange",
+                }}
+              ></Text>
+            </View>
+            <Button
+              onPress={() => picktrangsau()}
+              title="Sau ⇨"
+              color="black"
+              accessibilityLabel="Trang sau"
+            />
           </View>
-          <Button
-            onPress={() => picktrangsau()}
-            title="Sau ⇨"
-            color="black"
-            accessibilityLabel="Trang sau"
-          />
         </View>
       </View>
     </View>
@@ -1325,8 +454,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   slide: {
-    borderRadius: 10,
-    width: Width,
+    width: Width1,
     height: Height * 0.25,
+  },
+  slidet: {
+    width: Width / 2.3,
+    height: Height * 0.19,
+    borderRadius: 10,
+  },
+  slidev: {
+    width: Width1,
+    height: Height * 0.35,
+    marginBottom: 15,
   },
 });

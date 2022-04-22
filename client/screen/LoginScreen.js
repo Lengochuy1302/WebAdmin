@@ -91,7 +91,7 @@ export default function Login({ navigation }) {
       storeDataPass("");
     }
 
-    fetch("http://192.168.1.25:8000/loginclient", {
+    fetch("http://192.168.1.41:8000/loginclient", {
       method: "POST",
       headers: {
         Accept: "application/json",
