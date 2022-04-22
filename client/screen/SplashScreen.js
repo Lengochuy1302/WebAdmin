@@ -11,7 +11,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Logo from "../assets/logosplash.png";
+import Logo from "../assets/AETHHOUSE.png";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const BGColor = "#4D4A95";
 
@@ -86,7 +86,7 @@ export default function SplashScreen({ navigation }) {
         style={{
           flex: 1,
           zIndex: 1,
-          backgroundColor: '#f57c00',
+          backgroundColor: 'white',
           transform: [{ translateY: startAnimation }],
         }}
       >
@@ -101,8 +101,8 @@ export default function SplashScreen({ navigation }) {
           <Animated.Image
             source={Logo}
             style={{
-              width: 200,
-              height: 200,
+              width: 500,
+              height: 500,
               marginBottom: 5,
               transform: [
                 { translateX: moveLogo.x },
@@ -113,22 +113,22 @@ export default function SplashScreen({ navigation }) {
           ></Animated.Image>
           <Animated.Text
             style={{
-              fontSize: 35,
+              fontSize: 45,
               fontWeight: "bold",
-              color: "white",
+              color: "black",
               transform: [{ translateY: moveTitle.y }, { scale: scaleTitle }],
             }}
           >
-            Hi School!
+            Hi Room !
           </Animated.Text>
           <Animated.Text
             style={{
               fontSize: 30,
-              color: "white",
+              color: "black",
               transform: [{ translateY: moveTitle.y }, { scale: scaleTitle }],
             }}
           >
-            Ứng dụng quản lý sinh viên
+            Ứng dụng Tìm Kiếm Phòng Trọ
           </Animated.Text>
         </Animated.View>
       </Animated.View>
@@ -139,7 +139,7 @@ export default function SplashScreen({ navigation }) {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: '#f57c00',
+          backgroundColor: 'white',
           zIndex: 0,
           alignItems: "center",
           justifyContent: "center",
