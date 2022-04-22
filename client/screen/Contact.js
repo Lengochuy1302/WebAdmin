@@ -184,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
       return;
     }
 
-    fetch("http://192.168.1.137:3000/addProduc", {
+    fetch("http://192.168.1.25:3000/addProduc", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -251,7 +251,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
     console.log("Sửa san pham");
-    fetch("http://192.168.1.137:3000/updateProduc", {
+    fetch("http://192.168.1.25:3000/updateProduc", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -281,7 +281,7 @@ const HomeScreen = ({ navigation }) => {
 
   const removeSanPham = (id) => {
     console.log("Remove san pham");
-    fetch("http://192.168.1.137:3000/remove", {
+    fetch("http://192.168.1.25:3000/remove", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -343,7 +343,7 @@ const HomeScreen = ({ navigation }) => {
   const getData = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.137:8000/dssp/" + pageNumber,
+        "http://192.168.1.25:8000/dssp/" + pageNumber,
       );
       const json = await response.json();
       console.log(json);
@@ -445,7 +445,7 @@ const HomeScreen = ({ navigation }) => {
                   <Image
                     style={styles.slide}
                     source={{
-                      uri: "http://192.168.1.137:8000/upload/" + item.image,
+                      uri: "http://192.168.1.25:8000/upload/" + item.image,
                     }}
                   />
                   <View

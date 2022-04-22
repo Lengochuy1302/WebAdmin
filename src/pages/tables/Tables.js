@@ -124,7 +124,7 @@ export default function Tables(props) {
     if (trangthai == "Tạm khóa") {
       return;
     }
-    fetch("http://192.168.1.137:8000/addtrangthai", {
+    fetch("http://192.168.1.25:8000/addtrangthai", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -142,7 +142,7 @@ export default function Tables(props) {
     if (trangthai == "Hoạt động") {
       return;
     }
-    fetch("http://192.168.1.137:8000/addtrangthai", {
+    fetch("http://192.168.1.25:8000/addtrangthai", {
       method: "POST",
       headers: {
         Accept: "application/json",

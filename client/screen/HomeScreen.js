@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
       console.log("kkks");
     try {
       const response = await fetch(
-        "http://192.168.1.137:8000/getdatayeuthich/" +idtk,
+        "http://192.168.1.25:8000/getdatayeuthich/" +idtk,
       );
       const json = await response.json();
       console.log(json);
@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
 
  const removeSanPham = (id) => {
   console.log("Remove san pham");
-  fetch("http://192.168.1.137:8000/removeyeuthich", {
+  fetch("http://192.168.1.25:8000/removeyeuthich", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -158,7 +158,7 @@ const HomeScreen = ({ navigation }) => {
               }
               >
                      <View style={{fontSize: 17, marginBottom: 0 }}>
-                  <Image style={styles.slide} source={{ uri: "http://192.168.1.137:8000/upload/" +  item.image}} />
+                  <Image style={styles.slide} source={{ uri: "http://192.168.1.25:8000/upload/" +  item.image}} />
                   <View
                     style={{
                       backgroundColor: "rgba(0, 0, 0, 0.243)",

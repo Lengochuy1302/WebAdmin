@@ -12,17 +12,18 @@ import {
   Alert,
   Modal,
   StyleSheet,
+  SafeAreaView,
   Image,
   ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
- 
-import { MaterialIcons } from '@expo/vector-icons';
-var DATA2 = [];
+import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { MaterialIcons } from "@expo/vector-icons";
+
 const Width = Dimensions.get("screen").width - 20;
 const Height = Dimensions.get("screen").height;
 const Width1 = Dimensions.get("screen").width;
@@ -56,14 +57,13 @@ const DetailScreen = ({ route }) => {
   // DATA2.push(itemnew);
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [dataImg, setDataImg] = useState([]);
   const getData = async (id) => {
     try {
-      const response = await fetch(
-        "http://192.168.1.137:8000/dssv/"+ id,
-      );
+      const response = await fetch("http://192.168.1.25:8000/dssv/" + id);
       const json = await response.json();
-      console.log("data:",json[0].idroom);
-      console.log("data:",json[0].luotXem);
+      console.log("data:", json[0].idroom);
+      console.log("data:", json[0].luotXem);
       setData(json);
       setDataView(json[0].idroom, json[0].luotXem);
     } catch (error) {
@@ -72,8 +72,23 @@ const DetailScreen = ({ route }) => {
       setLoading(false);
     }
   };
+  const getDataImg = async (id) => {
+    try {
+      const response = await fetch(
+        "http://192.168.1.25:8000/getlisstimg/" + id,
+      );
+      const json = await response.json();
+      console.log("list img:", json);
+      setDataImg(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const setDataView = async (idrom, viewcount) => {
-    fetch("http://192.168.1.137:8000/updateView", {
+    fetch("http://192.168.1.25:8000/updateView", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -88,22 +103,24 @@ const DetailScreen = ({ route }) => {
       return response.json();
     });
   };
+
   useEffect(() => {
     AsyncStorage.getItem("iduser").then((value) => {
-      console.log("id tai khoan: ",value);
+      console.log("id tai khoan: ", value);
       setidtaikhoan(value);
     });
 
     AsyncStorage.getItem("keyidroom").then((value) => {
-      console.log("id phong: ",value);
+      console.log("id phong: ", value);
       setidphongtro(value);
       getData(value);
+      getDataImg(value);
     });
   }, []);
 
   const addYeuThich = () => {
-    console.log("id phong: ",idphongtro);
-    fetch("http://192.168.1.137:8000/yeuthich", {
+    console.log("id phong: ", idphongtro);
+    fetch("http://192.168.1.25:8000/yeuthich", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -129,319 +146,343 @@ const DetailScreen = ({ route }) => {
             renderItem={({ item }) => {
               return (
                 <View style={{ fontSize: 17, marginBottom: 0 }}>
-                  <ScrollView
-                  style={{height: Height+Height/2}}
-                  >
-                  <Image
-                    style={styles.slide}
-                    source={{
-                      uri: "http://192.168.1.137:8000/upload/" + item.image,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: "#000",
-                      opacity: 0.5,
-                      width: Width,
-                      margin: 10,
-                      height: 27,
-                      position: "absolute",
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                    }}
-                  ></View>
-                  <View
-                    style={{
-                      marginTop: -227,
-                      marginLeft: 15,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <Ionicons name="md-eye-outline" size={20} color="white" />
-                    <Text
-                      style={{
-                        marginTop: 2,
-                        fontSize: 17,
-                        marginLeft: 3,
-                        color: "#fff",
-                      }}
+                  <ScrollView style={{ height: Height + Height / 2 }}>
+                    <ScrollView
+                      showsHorizontalScrollIndicator={false}
+                      pagingEnabled
+                      horizontal
+                      style={styles.slide}
                     >
-                      {item.luotXem}
-                    </Text>
-                  </View>
+                      {dataImg.map((e, index) => (
+                        <Image
+                          key={e}
+                          resizeMode="stretch"
+                          style={styles.slideimg}
+                          source={{
+                            uri: "http://192.168.1.25:8000/upload/" + e.tenhinh,
+                          }}
+                        />
+                      ))}
+                    </ScrollView>
 
-                  <View
-                    style={{
-                      backgroundColor: "#000",
-                      opacity: 0.5,
-                      width: Width,
-                      margin: 10,
-                      marginTop: 185,
-                      height: 45,
-                      position: "absolute",
-                      borderBottomLeftRadius: 10,
-                      borderBottomRightRadius: 10,
-                    }}
-                  ></View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      position: "absolute",
-                      marginTop: 195,
-                      marginLeft: 20,
-                    }}
-                  >
-                    <Text
+                    <View
                       style={{
-                        flex: 1,
-                        color: "#fff",
+                        backgroundColor: "#000",
+                        opacity: 0.5,
+                        width: Width,
+                        margin: 10,
+                        height: 27,
                         position: "absolute",
-                        textAlign: "left",
-                        fontSize: 25,
-                        fontWeight: "800",
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
                       }}
-                    >
-                      {item.tenPhong}
-                    </Text>
-                    <TouchableOpacity
+                    ></View>
+                    <View
                       style={{
-                        flex: 1,
-                        marginTop: 3,
+                        marginTop: -227,
+                        marginLeft: 15,
+                        flexDirection: "row",
                       }}
                     >
+                      <Ionicons name="md-eye-outline" size={20} color="white" />
                       <Text
                         style={{
-                          alignSelf: "flex-end",
-                          marginRight: 20,
-                        }}
-                      >
-                        <AntDesign
-                          onPress={() => addYeuThich()}
-                          name="hearto"
-                          size={24}
-                          color="white"
-                        />
-                        <View style={{ marginLeft: 10 }}></View>
-                        <AntDesign
-                          onPress={() => alert("đã chọn share")}
-                          name="sharealt"
-                          size={24}
-                          color="white"
-                        />
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    style={{
-                      position: "absolute",
-                      marginTop: 245,
-                      marginLeft: 20,
-                      flexDirection: "row"
-                    }}
-                  >
-                    <View
-                     style={{
-                      flex: 1,
-                      marginLeft: -13,
-                     alignItems: "center"
-                    }}
-                    >
-                      <Text
-                        style={{
-                          color: "#000000a6",
-                          fontSize: 20,
-                          fontWeight: "700",
-                        }}
-                      >
-                        Giá phòng
-                      </Text>
-                      <Text
-                        style={{
-                          color: "green",
+                          marginTop: 2,
                           fontSize: 17,
-                          fontWeight: "600",
+                          marginLeft: 3,
+                          color: "#fff",
                         }}
                       >
-                        {item.giaPhong.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}
+                        {item.luotXem}
                       </Text>
                     </View>
-                    <View
-                     style={{
-                    flex: 1,
-                     alignItems: "center"
-                    }}
-                    >
-                      <Text
-                        style={{
-                          color: "#000000a6",
-                          fontSize: 20,
-                          fontWeight: "700",
-                        }}
-                      >
-                        Tình trạng
-                      </Text>
-                      <Text
-                        style={{
-                          color: "red",
-                          fontSize: 17,
-                          fontWeight: "600",
-                        }}
-                      >
-                        Còn
-                      </Text>
-                    </View>
-                    <View
-                     style={{
-                      flex: 1,
-                     alignItems: "center"
-                    }}
-                    >
-                      <Text
-                        style={{
-                          color: "#000000a6",
-                          fontSize: 20,
-                          fontWeight: "700",
-                        }}
-                      >
-                        Diện tich
-                      </Text>
-                      <Text
-                        style={{
-                          color: "blue",
-                          fontSize: 17,
-                          fontWeight: "600",
-                        }}
-                      >
-                        {item.chieuDai*item.chieuRong}m²
-                      </Text>
-                    </View>
-                  </View>
 
-                  <View
-                    style={{
-                      position: "absolute",
-                      marginTop: 300,
-                      marginLeft: 20,
-                      flexDirection: "row"
-                    }}
-                  >
                     <View
-                     style={{
-                      flex: 1,
-                      marginLeft: 50,
-                     alignItems: "center"
-                    }}
+                      style={{
+                        backgroundColor: "#000",
+                        opacity: 0.5,
+                        width: Width,
+                        margin: 10,
+                        marginTop: 185,
+                        height: 45,
+                        position: "absolute",
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        position: "absolute",
+                        marginTop: 195,
+                        marginLeft: 20,
+                      }}
                     >
-                     <Entypo name="water" size={24} color="deepskyblue" />
                       <Text
                         style={{
-                          color: "black",
+                          flex: 1,
+                          color: "#fff",
+                          position: "absolute",
+                          textAlign: "left",
+                          fontSize: 25,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {item.tenPhong}
+                      </Text>
+                      <TouchableOpacity
+                        style={{
+                          flex: 1,
+                          marginTop: 3,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            alignSelf: "flex-end",
+                            marginRight: 20,
+                          }}
+                        >
+                          <AntDesign
+                            onPress={() => addYeuThich()}
+                            name="hearto"
+                            size={24}
+                            color="white"
+                          />
+                          <View style={{ marginLeft: 10 }}></View>
+                          <AntDesign
+                            onPress={() => alert("đã chọn share")}
+                            name="sharealt"
+                            size={24}
+                            color="white"
+                          />
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        position: "absolute",
+                        marginTop: 245,
+                        marginLeft: 20,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          marginLeft: -13,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#000000a6",
+                            fontSize: 20,
+                            fontWeight: "700",
+                          }}
+                        >
+                          Giá phòng
+                        </Text>
+                        <Text
+                          style={{
+                            color: "green",
+                            fontSize: 17,
+                            fontWeight: "600",
+                          }}
+                        >
+                          {item.giaPhong.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#000000a6",
+                            fontSize: 20,
+                            fontWeight: "700",
+                          }}
+                        >
+                          Tình trạng
+                        </Text>
+                        <Text
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            fontWeight: "600",
+                          }}
+                        >
+                          Còn
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#000000a6",
+                            fontSize: 20,
+                            fontWeight: "700",
+                          }}
+                        >
+                          Diện tich
+                        </Text>
+                        <Text
+                          style={{
+                            color: "blue",
+                            fontSize: 17,
+                            fontWeight: "600",
+                          }}
+                        >
+                          {item.chieuDai * item.chieuRong}m²
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View
+                      style={{
+                        position: "absolute",
+                        marginTop: 300,
+                        marginLeft: 20,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          marginLeft: 50,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Entypo name="water" size={24} color="deepskyblue" />
+                        <Text
+                          style={{
+                            color: "black",
+                            fontSize: 17,
+                            marginTop: 5,
+                            fontWeight: "600",
+                          }}
+                        >
+                          {item.giaPhong.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          marginRight: 55,
+                          alignItems: "center",
+                        }}
+                      >
+                        <MaterialIcons
+                          name="lightbulb-outline"
+                          size={25}
+                          color="black"
+                        />
+                        <Text
+                          style={{
+                            color: "black",
+                            fontSize: 17,
+                            marginTop: 5,
+                            fontWeight: "600",
+                          }}
+                        >
+                          {item.giaDien.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        position: "absolute",
+                        width: Width,
+                        marginTop: 405,
+                        marginLeft: 20,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#000000a6",
+                          textAlign: "left",
+                          fontSize: 20,
+                          fontWeight: "700",
+                        }}
+                      >
+                        Địa chỉ:
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#000000a6",
+                          textAlign: "left",
                           fontSize: 17,
                           marginTop: 5,
                           fontWeight: "600",
                         }}
                       >
-                        {item.giaPhong.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}
+                        <Ionicons
+                          name="location-outline"
+                          size={20}
+                          color="black"
+                        />{" "}
+                        {item.duong}, {item.phuong}, {item.quan}, {item.tinh}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#000000a6",
+                          textAlign: "left",
+                          fontSize: 17,
+                          marginTop: 10,
+                          fontWeight: "600",
+                        }}
+                      >
+                        <Entypo name="back-in-time" size={20} color="black" />{" "}
+                        {item.ngayTao}
                       </Text>
                     </View>
                     <View
-                     style={{
-                    flex: 1,
-                    marginRight: 55,
-                     alignItems: "center"
-                    }}
+                      style={{
+                        position: "absolute",
+                        width: Width,
+                        marginTop: 495,
+                        marginLeft: 20,
+                      }}
                     >
-<MaterialIcons name="lightbulb-outline" size={25} color="black" />
                       <Text
                         style={{
-                          color: "black",
+                          color: "#000000a6",
+                          textAlign: "left",
+                          fontSize: 20,
+                          fontWeight: "700",
+                        }}
+                      >
+                        Mô tả:
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#000000a6",
+                          textAlign: "left",
                           fontSize: 17,
+                          width: Width - 20,
                           marginTop: 5,
                           fontWeight: "600",
                         }}
                       >
-                       {item.giaDien.toLocaleString('en-US', {style : 'currency', currency : 'VND'})}
+                        {item.moTa}
                       </Text>
                     </View>
-                  </View>
-                  <View
-                          style={{
-            
-                            position: "absolute",
-                            width: Width,
-                            marginTop: 405,
-                            marginLeft: 20,
-                     
-                          }}
-                  >
-                  <Text
-                    style={{
-                      color: "#000000a6",
-                      textAlign: "left",
-                      fontSize: 20,
-                      fontWeight: "700",
-                    }}
-                  >
-                    Địa chỉ: 
-                  </Text>
-                  <Text
-                      style={{
-                        color: "#000000a6",
-                        textAlign: "left",
-                        fontSize: 17,
-                        marginTop: 5,
-                        fontWeight: "600",
-                      }}
-                  >
-                <Ionicons name="location-outline" size={20} color="black" /> {item.duong}, {item.phuong}, {item.quan}, {item.tinh}
-                  </Text>
-                  <Text
-                      style={{
-                        color: "#000000a6",
-                        textAlign: "left",
-                        fontSize: 17,
-                        marginTop: 10,
-                        fontWeight: "600",
-                      }}
-                  >
-               <Entypo name="back-in-time" size={20} color="black" /> {item.ngayTao}
-                  </Text>
-                  </View>
-                  <View
-                          style={{
-            
-                            position: "absolute",
-                            width: Width,
-                            marginTop: 495,
-                            marginLeft: 20,
-                     
-                          }}
-                  >
-                  <Text
-                    style={{
-                      color: "#000000a6",
-                      textAlign: "left",
-                      fontSize: 20,
-                      fontWeight: "700",
-                    }}
-                  >
-                    Mô tả:
-                  </Text>
-                  <Text
-                      style={{
-                        color: "#000000a6",
-                        textAlign: "left",
-                        fontSize: 17,
-                        width: Width-20,
-                        marginTop: 5,
-                        fontWeight: "600",
-                      }}
-                  >
-                 {item.moTa}
-                  </Text>
-                  </View>
                   </ScrollView>
-                 
                 </View>
               );
             }}
@@ -516,6 +557,11 @@ const styles = StyleSheet.create({
   slide: {
     borderRadius: 10,
     margin: 10,
+    width: Width,
+    height: 220,
+  },
+  slideimg: {
+    borderRadius: 10,
     width: Width,
     height: 220,
   },
